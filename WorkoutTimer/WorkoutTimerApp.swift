@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct WorkoutTimerApp: App {
@@ -13,5 +14,11 @@ struct WorkoutTimerApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [
+            WorkoutTimerItem.self,
+            TimerExerciseItem.self,
+            WorkoutItem.self,
+            ExerciseItem.self
+        ])
     }
 }

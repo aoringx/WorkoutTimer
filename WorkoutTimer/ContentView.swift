@@ -6,14 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+    @AppStorage(LegacyExerciseCleanup.didCleanupKey)
+    private var didRemoveExperimentalExercises = false
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                Text("Workout Timer")
+                Text("Aaron's\nWorkout Timer")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
 
                 NavigationLink {
                     TimersOptionsView()
@@ -21,7 +28,7 @@ struct ContentView: View {
                     Label("Timers", systemImage: "timer")
                         .frame(width: 180)
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.bordered)
                 
                 NavigationLink {
                     ExercisesOptionsView()
@@ -42,6 +49,16 @@ struct ContentView: View {
 
             }
             .padding()
+        }
+        .task {
+            guard !didRemoveExperimentalExercises else { return }
+
+            do {
+                try LegacyExerciseCleanup.removeSeededExercises(in: modelContext)
+                didRemoveExperimentalExercises = true
+            } catch {
+                // Leave the flag unset so cleanup can retry on a later launch.
+            }
         }
     }
 }

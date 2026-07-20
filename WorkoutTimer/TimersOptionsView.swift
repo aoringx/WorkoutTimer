@@ -15,15 +15,15 @@ struct TimersOptionsView: View {
             NavigationLink {
                 GenerateTimerView()
             } label: {
-                Label("Generate New Timer", systemImage: "plus.circle")
+                Label("Create New Timer", systemImage: "plus.circle")
                     .frame(width: 220)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.bordered)
 
             NavigationLink {
-                LoadTimersView()
+                OpenTimerView()
             } label: {
-                Label("Load Timer", systemImage: "folder")
+                Label("Open Timer", systemImage: "folder")
                     .frame(width: 220)
             }
             .buttonStyle(.bordered)
