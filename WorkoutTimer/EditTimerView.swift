@@ -9,7 +9,7 @@ import SwiftUI
 struct EditTimerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \WorkoutTimerItem.name) private var savedTimers: [WorkoutTimerItem]
+    @Query private var savedTimers: [WorkoutTimerItem]
 
     let timer: WorkoutTimerItem
 
@@ -35,10 +35,8 @@ struct EditTimerView: View {
     private var isDuplicateTimerName: Bool {
         savedTimers.contains { savedTimer in
             savedTimer.id != timer.id
-                && savedTimer.name.compare(
-                    trimmedTimerName,
-                    options: [.caseInsensitive, .diacriticInsensitive]
-                ) == .orderedSame
+                && savedTimer.name.normalizedForComparison
+                    == trimmedTimerName.normalizedForComparison
         }
     }
 
@@ -97,7 +95,9 @@ struct EditTimerView: View {
         }
         .fullScreenCover(isPresented: $isExercisePickerPresented) {
             ExercisePickerView(
-                excludedExerciseNames: Set(exercises.map { normalizedName($0.exerciseName) })
+                excludedExerciseNames: Set(
+                    exercises.map { $0.exerciseName.normalizedForComparison }
+                )
             ) { selectedExercises in
                 exercises.append(
                     contentsOf: selectedExercises.map { exercise in
@@ -141,10 +141,6 @@ struct EditTimerView: View {
         }
 
         timer.name = trimmedTimerName
-        timer.sets = exercises.reduce(0) { $0 + $1.numberOfSets }
-        timer.durationSeconds = exercises.reduce(0) { total, exercise in
-            total + max(exercise.numberOfSets - 1, 0) * exercise.restSeconds
-        }
         timer.updatedAt = Date()
         timer.exercises = updatedExercises
 
@@ -163,10 +159,6 @@ struct EditTimerView: View {
             modelContext.rollback()
             saveError = error
         }
-    }
-
-    private func normalizedName(_ name: String) -> String {
-        name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 }
 

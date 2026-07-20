@@ -17,7 +17,6 @@ struct WorkoutTimerApp: App {
         .modelContainer(for: [
             WorkoutTimerItem.self,
             TimerExerciseItem.self,
-            WorkoutItem.self,
             ExerciseItem.self
         ])
     }

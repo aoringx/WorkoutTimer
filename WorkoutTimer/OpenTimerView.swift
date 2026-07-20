@@ -7,17 +7,13 @@ import SwiftUI
 import SwiftData
 
 struct OpenTimerView: View {
-    @Query(sort: \WorkoutTimerItem.updatedAt, order: .reverse)
-    private var timers: [WorkoutTimerItem]
+    @Query private var timers: [WorkoutTimerItem]
+
+    @AppStorage(AppSettingKey.timerSortOption)
+    private var sortOption = TimerSortOption.recentlyUpdated
 
     private var orderedTimers: [WorkoutTimerItem] {
-        timers.sorted { first, second in
-            if first.isPinned != second.isPinned {
-                return first.isPinned
-            }
-
-            return first.updatedAt > second.updatedAt
-        }
+        sortOption.sorted(timers)
     }
 
     var body: some View {
@@ -26,7 +22,7 @@ struct OpenTimerView: View {
                 ContentUnavailableView(
                     "No Saved Timers",
                     systemImage: "timer",
-                    description: Text("Generate and save a timer to open it here.")
+                    description: Text("Create and save a timer to open it here.")
                 )
             } else {
                 List(orderedTimers) { timer in
@@ -41,5 +37,12 @@ struct OpenTimerView: View {
         }
         .navigationTitle("Open Timer")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if !timers.isEmpty {
+                ToolbarItem(placement: .topBarTrailing) {
+                    TimerSortMenu(selection: $sortOption)
+                }
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@ import SwiftUI
 import UIKit
 
 struct TimerRunnerView: View {
-    private enum RunPhase: String {
+    private enum RunPhase {
         case exerciseSet
         case rest
     }
@@ -312,15 +312,6 @@ struct TimerRunnerView: View {
             remainingRestSeconds = 0
             restCountdownID = UUID()
         }
-    }
-
-    private func resetTimer() {
-        currentExerciseIndex = 0
-        currentSetNumber = 1
-        phase = .exerciseSet
-        remainingRestSeconds = 0
-        isFinished = false
-        restCountdownID = UUID()
     }
 
     private func returnToLastSet() {

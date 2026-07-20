@@ -10,12 +10,15 @@ import SwiftData
 
 struct ExercisesOptionsView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \ExerciseItem.name) private var exercises: [ExerciseItem]
+    @Query private var exercises: [ExerciseItem]
 
     @State private var searchText = ""
     @State private var selectedCategory: ExerciseCategory?
     @State private var editorTarget: ExerciseEditorTarget?
     @State private var saveError: Error?
+
+    @AppStorage(AppSettingKey.exerciseSortOption)
+    private var sortOption = ExerciseSortOption.name
 
     @AppStorage(AppSettingKey.defaultSets)
     private var defaultSets = AppSettingDefault.sets
@@ -27,7 +30,7 @@ struct ExercisesOptionsView: View {
     private var defaultRestSeconds = AppSettingDefault.restSeconds
 
     private var visibleExercises: [ExerciseItem] {
-        exercises.filter { exercise in
+        let filteredExercises = exercises.filter { exercise in
             let matchesCategory = selectedCategory == nil
                 || exercise.exerciseCategory == selectedCategory
             let matchesSearch = searchText.isEmpty
@@ -36,6 +39,8 @@ struct ExercisesOptionsView: View {
 
             return matchesCategory && matchesSearch
         }
+
+        return sortOption.sorted(filteredExercises)
     }
 
     var body: some View {
@@ -45,11 +50,6 @@ struct ExercisesOptionsView: View {
                     Label("No Exercises", systemImage: "figure.strengthtraining.traditional")
                 } description: {
                     Text("Build your exercise library by adding your first exercise.")
-                } actions: {
-                    Button("Add Exercise", systemImage: "plus") {
-                        editorTarget = .new
-                    }
-                    .buttonStyle(.borderedProminent)
                 }
             } else if visibleExercises.isEmpty && !searchText.isEmpty {
                 ContentUnavailableView.search(text: searchText)
@@ -58,11 +58,6 @@ struct ExercisesOptionsView: View {
                     Text("No \(selectedCategory.rawValue) Exercises")
                 } description: {
                     Text("Try another type or add an exercise to this category.")
-                } actions: {
-                    Button("Show All Types") {
-                        self.selectedCategory = nil
-                    }
-                    .buttonStyle(.bordered)
                 }
             } else {
                 List {
@@ -114,6 +109,26 @@ struct ExercisesOptionsView: View {
                 .accessibilityLabel("Filter exercise type")
             }
 
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Menu {
+                    Picker("Sort By", selection: $sortOption) {
+                        ForEach(ExerciseSortOption.allCases) { option in
+                            Label(option.title, systemImage: option.systemImage)
+                                .tag(option)
+                        }
+                    }
+                } label: {
+                    Label("Sort", systemImage: "arrow.up.arrow.down")
+                }
+                .accessibilityLabel("Sort exercises")
+
+                Button {
+                    editorTarget = .new
+                } label: {
+                    Image(systemName: "plus")
+                }
+                .accessibilityLabel("Add exercise")
+            }
         }
         .fullScreenCover(item: $editorTarget) { target in
             ExerciseEditorView(

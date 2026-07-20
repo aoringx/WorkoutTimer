@@ -9,7 +9,7 @@ import SwiftUI
 struct ExerciseEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \ExerciseItem.name) private var exercises: [ExerciseItem]
+    @Query private var exercises: [ExerciseItem]
 
     let exercise: ExerciseItem?
 
@@ -28,10 +28,8 @@ struct ExerciseEditorView: View {
     private var isDuplicate: Bool {
         exercises.contains { candidate in
             candidate.id != exercise?.id
-                && candidate.name.compare(
-                    trimmedName,
-                    options: [.caseInsensitive, .diacriticInsensitive]
-                ) == .orderedSame
+                && candidate.name.normalizedForComparison
+                    == trimmedName.normalizedForComparison
         }
     }
 

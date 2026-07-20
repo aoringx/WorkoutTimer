@@ -10,32 +10,30 @@ import SwiftData
 final class WorkoutTimerItem: Identifiable {
     @Attribute(.unique) var id: UUID
     var name: String
-    var durationSeconds: Int
-    var sets: Int
     var isPinned: Bool = false
+    var manualSortOrder: Int = 0
     @Relationship(deleteRule: .cascade, inverse: \TimerExerciseItem.timer)
     var exercises: [TimerExerciseItem] = []
-    var createdAt: Date
     var updatedAt: Date
 
     init(
         id: UUID = UUID(),
         name: String,
-        durationSeconds: Int,
-        sets: Int,
         isPinned: Bool = false,
+        manualSortOrder: Int = 0,
         exercises: [TimerExerciseItem] = [],
-        createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
         self.id = id
         self.name = name
-        self.durationSeconds = durationSeconds
-        self.sets = sets
         self.isPinned = isPinned
+        self.manualSortOrder = manualSortOrder
         self.exercises = exercises
-        self.createdAt = createdAt
         self.updatedAt = updatedAt
+    }
+
+    var sets: Int {
+        exercises.reduce(0) { $0 + $1.numberOfSets }
     }
 
     var orderedExercises: [TimerExerciseItem] {

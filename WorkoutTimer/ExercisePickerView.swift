@@ -62,7 +62,9 @@ struct ExercisePickerView: View {
                 } else {
                     List(visibleExercises) { exercise in
                         let isAlreadyAdded = excludedExerciseIDs.contains(exercise.id)
-                            || excludedExerciseNames.contains(normalizedName(exercise.name))
+                            || excludedExerciseNames.contains(
+                                exercise.name.normalizedForComparison
+                            )
                         let selectionNumber = selectedExerciseIDs.firstIndex(of: exercise.id)
                             .map { $0 + 1 }
 
@@ -144,9 +146,5 @@ struct ExercisePickerView: View {
         } else {
             selectedExerciseIDs.append(exercise.id)
         }
-    }
-
-    private func normalizedName(_ name: String) -> String {
-        name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 }

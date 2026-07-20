@@ -6,7 +6,7 @@
 import Foundation
 import SwiftData
 
-enum ExerciseCategory: String, CaseIterable, Codable, Identifiable {
+enum ExerciseCategory: String, CaseIterable, Identifiable {
     case handstand = "Handstand"
     case push = "Push"
     case pull = "Pull"
@@ -26,7 +26,6 @@ final class ExerciseItem: Identifiable {
     var numberOfSets: Int = 3
     var numberOfReps: Int = 10
     var restSeconds: Int = 60
-    var createdAt: Date
     var updatedAt: Date
 
     init(
@@ -37,7 +36,6 @@ final class ExerciseItem: Identifiable {
         numberOfSets: Int = 3,
         numberOfReps: Int = 10,
         restSeconds: Int = 60,
-        createdAt: Date = Date(),
         updatedAt: Date = Date()
     ) {
         self.id = id
@@ -47,7 +45,6 @@ final class ExerciseItem: Identifiable {
         self.numberOfSets = numberOfSets
         self.numberOfReps = numberOfReps
         self.restSeconds = restSeconds
-        self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
 

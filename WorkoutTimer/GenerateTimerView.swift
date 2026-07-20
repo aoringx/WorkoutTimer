@@ -9,7 +9,7 @@ import SwiftData
 struct GenerateTimerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \WorkoutTimerItem.name) private var savedTimers: [WorkoutTimerItem]
+    @Query private var savedTimers: [WorkoutTimerItem]
 
     @State private var selectedExercises: [ExerciseItem] = []
     @State private var isExercisePickerPresented = true
@@ -22,10 +22,8 @@ struct GenerateTimerView: View {
 
     private var isDuplicateTimerName: Bool {
         savedTimers.contains { timer in
-            timer.name.compare(
-                trimmedTimerName,
-                options: [.caseInsensitive, .diacriticInsensitive]
-            ) == .orderedSame
+            timer.name.normalizedForComparison
+                == trimmedTimerName.normalizedForComparison
         }
     }
 
@@ -159,14 +157,9 @@ struct GenerateTimerView: View {
         let timerExercises = selectedExercises.enumerated().map { position, exercise in
             TimerExerciseItem(position: position, exercise: exercise)
         }
-        let totalSets = selectedExercises.reduce(0) { $0 + $1.numberOfSets }
-        let totalRestSeconds = selectedExercises.reduce(0) { total, exercise in
-            total + max(exercise.numberOfSets - 1, 0) * exercise.restSeconds
-        }
         let timer = WorkoutTimerItem(
             name: trimmedTimerName,
-            durationSeconds: totalRestSeconds,
-            sets: totalSets,
+            manualSortOrder: nextManualSortOrder,
             exercises: timerExercises
         )
 
@@ -179,6 +172,10 @@ struct GenerateTimerView: View {
             modelContext.rollback()
             saveError = error
         }
+    }
+
+    private var nextManualSortOrder: Int {
+        (savedTimers.map(\.manualSortOrder).max() ?? -1) + 1
     }
 }
 

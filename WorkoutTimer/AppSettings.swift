@@ -3,8 +3,6 @@
 //  WorkoutTimer
 //
 
-import Foundation
-
 enum AppSettingKey {
     static let soundEnabled = "settings.soundEnabled"
     static let countdownBeepsEnabled = "settings.countdownBeepsEnabled"
@@ -14,6 +12,8 @@ enum AppSettingKey {
     static let defaultSets = "settings.defaultSets"
     static let defaultReps = "settings.defaultReps"
     static let defaultRestSeconds = "settings.defaultRestSeconds"
+    static let exerciseSortOption = "settings.exerciseSortOption"
+    static let timerSortOption = "settings.timerSortOption"
 }
 
 enum AppSettingDefault {

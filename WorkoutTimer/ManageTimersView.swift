@@ -8,19 +8,15 @@ import SwiftData
 
 struct ManageTimersView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \WorkoutTimerItem.updatedAt, order: .reverse)
-    private var timers: [WorkoutTimerItem]
+    @Query private var timers: [WorkoutTimerItem]
 
     @State private var updateError: Error?
 
-    private var orderedTimers: [WorkoutTimerItem] {
-        timers.sorted { first, second in
-            if first.isPinned != second.isPinned {
-                return first.isPinned
-            }
+    @AppStorage(AppSettingKey.timerSortOption)
+    private var sortOption = TimerSortOption.recentlyUpdated
 
-            return first.updatedAt > second.updatedAt
-        }
+    private var orderedTimers: [WorkoutTimerItem] {
+        sortOption.sorted(timers)
     }
 
     var body: some View {
@@ -52,6 +48,7 @@ struct ManageTimersView: View {
                         }
                     }
                     .onDelete(perform: deleteTimers)
+                    .onMove(perform: moveTimers)
                 }
                 .listStyle(.insetGrouped)
             }
@@ -60,7 +57,10 @@ struct ManageTimersView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if !timers.isEmpty {
-                EditButton()
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    TimerSortMenu(selection: $sortOption)
+                    EditButton()
+                }
             }
         }
         .alert(
@@ -86,6 +86,26 @@ struct ManageTimersView: View {
             try modelContext.save()
         } catch {
             modelContext.rollback()
+            updateError = error
+        }
+    }
+
+    private func moveTimers(from source: IndexSet, to destination: Int) {
+        var reorderedTimers = orderedTimers
+        reorderedTimers.move(fromOffsets: source, toOffset: destination)
+
+        for (position, timer) in reorderedTimers.enumerated() {
+            timer.manualSortOrder = position
+        }
+
+        let previousSortOption = sortOption
+        sortOption = .manual
+
+        do {
+            try modelContext.save()
+        } catch {
+            modelContext.rollback()
+            sortOption = previousSortOption
             updateError = error
         }
     }
