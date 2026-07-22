@@ -196,7 +196,8 @@ private struct TimerExerciseRow: View {
             }
 
             Text(
-                "\(exercise.numberOfSets) sets × \(exercise.numberOfReps) reps • "
+                "\(exercise.numberOfSets) sets × "
+                    + "\(exercise.numberOfReps) reps/seconds • "
                     + "\(exercise.restSeconds) sec rest"
             )
             .font(.subheadline)

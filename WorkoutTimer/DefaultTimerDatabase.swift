@@ -17,16 +17,17 @@ enum DefaultTimerDatabase {
         TimerDefinition(
             name: "Planche and Push",
             exerciseNames: [
-                "Crow Pose",
                 "Tuck Planche",
                 "Pseudo Planche Lean",
                 "Knee Pseudo Planche Lean",
                 "Pseudo Planche Push-Ups",
-                "Push-Ups",
-                "Dips",
+                "Handstand Push-Ups",
+                "Pike Push-Ups",
                 "Russian Push-Ups",
                 "Diamond Push-Ups",
-                "Tricep Extensions"
+                "Tricep Extensions",
+                "Push-Ups",
+                "Dips"
             ]
         ),
         TimerDefinition(
@@ -35,10 +36,9 @@ enum DefaultTimerDatabase {
                 "Assisted Muscle-Ups",
                 "Pull-Ups",
                 "Assisted Pull-Ups",
-                "Inverted Rows",
                 "Chin-Ups",
                 "Assisted Chin-Ups",
-                "Front Lever Rows",
+                "Tuck Front Lever",
                 "Dead Hangs",
                 "Pistol Squats",
                 "Squats",
@@ -49,10 +49,11 @@ enum DefaultTimerDatabase {
         TimerDefinition(
             name: "Handstand and Core",
             exerciseNames: [
-                "Wall Handstand Holds",
-                "Freestanding Handstand Holds",
-                "Handstand Shoulder Taps",
                 "Handstand Push-Ups",
+                "Freestanding Handstand Holds",
+                "Wall Handstand Shoulder Taps",
+                "Wall Handstand Holds",
+                "Crow Pose",
                 "Pike Push-Ups",
                 "Tuck L-Sit",
                 "L-Sit Extensions",
@@ -65,7 +66,7 @@ enum DefaultTimerDatabase {
     ]
 
     // Increment this when the default timer collection changes.
-    private static let version = 1
+    private static let version = 2
     private static let installedVersionKey = "database.defaultTimerContentVersion"
 
     static func installIfNeeded(in modelContext: ModelContext) throws {

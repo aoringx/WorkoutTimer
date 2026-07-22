@@ -60,7 +60,11 @@ struct SettingsView: View {
 
             Section {
                 Stepper("Sets: \(defaultSets)", value: $defaultSets, in: 1...20)
-                Stepper("Reps per Set: \(defaultReps)", value: $defaultReps, in: 1...100)
+                Stepper(
+                    "Reps/Seconds: \(defaultReps)",
+                    value: $defaultReps,
+                    in: 1...100
+                )
                 Stepper(
                     "Rest Time: \(restTimeDescription)",
                     value: $defaultRestSeconds,

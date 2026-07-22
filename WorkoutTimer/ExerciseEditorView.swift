@@ -65,7 +65,11 @@ struct ExerciseEditorView: View {
 
                 Section("Workout Settings") {
                     Stepper("Sets: \(numberOfSets)", value: $numberOfSets, in: 1...20)
-                    Stepper("Reps per Set: \(numberOfReps)", value: $numberOfReps, in: 1...100)
+                    Stepper(
+                        "Reps/Seconds: \(numberOfReps)",
+                        value: $numberOfReps,
+                        in: 1...100
+                    )
                     Stepper(
                         "Rest Time: \(restTimeDescription)",
                         value: $restSeconds,

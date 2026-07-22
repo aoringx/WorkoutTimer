@@ -60,7 +60,7 @@ struct TimerSetCard: View {
             }
 
             HStack(spacing: 10) {
-                TimerMetric(value: "\(exercise.numberOfReps)", label: "Reps")
+                TimerMetric(value: "\(exercise.numberOfReps)", label: "Reps/Seconds")
                 TimerMetric(value: formattedRest, label: "Rest Next")
             }
 

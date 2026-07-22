@@ -79,7 +79,8 @@ struct ExercisePickerView: View {
 
                                     Text(
                                         "\(exercise.exerciseCategory.rawValue) • "
-                                            + "\(exercise.numberOfSets) × \(exercise.numberOfReps)"
+                                            + "\(exercise.numberOfSets) sets × "
+                                            + "\(exercise.numberOfReps) reps/seconds"
                                     )
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
