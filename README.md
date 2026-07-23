@@ -8,7 +8,7 @@ WorkoutTimer is a native iOS calisthenics workout timer for building exercise li
 - Organize exercises into Planche, Push, Pull, Legs, Handstand, and Core categories.
 - Configure sets, reps or seconds, rest time, and notes for each exercise.
 - Build reusable workout timers by selecting and reordering exercises.
-- Run workouts with set progress, rest countdowns, and upcoming-exercise previews.
+- Run workouts with automatic guided warm-up and cool-down phases, an exercise jump slider, set progress, background-safe rest countdowns, completion alerts, and upcoming-exercise previews.
 - Pin, sort, reorder, edit, and delete saved timers.
 - Enable sound effects, countdown beeps, haptic feedback, automatic set advancement, and screen-awake behavior.
 - Start with a bundled calisthenics exercise catalog and ready-made routines.

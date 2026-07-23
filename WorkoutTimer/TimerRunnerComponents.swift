@@ -5,6 +5,55 @@
 
 import SwiftUI
 
+struct TimerRoutinePhaseCard: View {
+    let title: String
+    let subtitle: String
+    let systemImage: String
+    let tint: Color
+    let steps: [String]
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: systemImage)
+                .font(.system(size: 52))
+                .foregroundStyle(tint)
+                .frame(width: 88, height: 88)
+                .background(tint.opacity(0.12), in: Circle())
+
+            VStack(spacing: 8) {
+                Text(title)
+                    .font(.largeTitle.bold())
+
+                Text(subtitle)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
+
+            VStack(alignment: .leading, spacing: 16) {
+                ForEach(Array(steps.enumerated()), id: \.offset) { index, step in
+                    HStack(alignment: .top, spacing: 12) {
+                        Text("\(index + 1)")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(tint)
+                            .frame(width: 28, height: 28)
+                            .background(tint.opacity(0.12), in: Circle())
+
+                        Text(step)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(24)
+        .background(tint.opacity(0.08), in: RoundedRectangle(cornerRadius: 24))
+        .overlay {
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(tint.opacity(0.35), lineWidth: 1)
+        }
+    }
+}
+
 struct TimerProgressSection: View {
     let currentExerciseNumber: Int
     let exerciseCount: Int
@@ -12,6 +61,9 @@ struct TimerProgressSection: View {
     let exerciseSetCount: Int
     let completedSetCount: Int
     let totalSetCount: Int
+    let exerciseNames: [String]
+    let currentExerciseIndex: Int
+    let selectionAction: (Int) -> Void
 
     var body: some View {
         VStack(spacing: 8) {
@@ -26,15 +78,105 @@ struct TimerProgressSection: View {
                     .foregroundStyle(.secondary)
             }
 
-            ProgressView(
-                value: Double(completedSetCount),
-                total: Double(max(totalSetCount, 1))
+            TimerSetProgressExerciseSlider(
+                completedSetCount: completedSetCount,
+                totalSetCount: totalSetCount,
+                exerciseNames: exerciseNames,
+                currentExerciseIndex: currentExerciseIndex,
+                selectionAction: selectionAction
             )
 
-            Text("\(completedSetCount) of \(totalSetCount) sets completed")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Text("\(completedSetCount) of \(totalSetCount) sets completed")
+
+                Spacer()
+
+                Text(exerciseNames[currentExerciseIndex])
+                    .lineLimit(1)
+            }
+            .font(.caption)
+            .foregroundStyle(.secondary)
+        }
+    }
+}
+
+private struct TimerSetProgressExerciseSlider: View {
+    let completedSetCount: Int
+    let totalSetCount: Int
+    let exerciseNames: [String]
+    let currentExerciseIndex: Int
+    let selectionAction: (Int) -> Void
+
+    var body: some View {
+        GeometryReader { geometry in
+            let thumbDiameter: CGFloat = 26
+            let thumbRadius = thumbDiameter / 2
+            let selectableWidth = max(geometry.size.width - thumbDiameter, 0)
+            let exerciseFraction = exerciseNames.count > 1
+                ? CGFloat(currentExerciseIndex) / CGFloat(exerciseNames.count - 1)
+                : 0.5
+            let setFraction = min(
+                max(CGFloat(completedSetCount) / CGFloat(max(totalSetCount, 1)), 0),
+                1
+            )
+
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(.secondary.opacity(0.2))
+                    .frame(height: 5)
+
+                Capsule()
+                    .fill(.tint)
+                    .frame(
+                        width: geometry.size.width * setFraction,
+                        height: 5
+                    )
+
+                Circle()
+                    .fill(.background)
+                    .stroke(.tint, lineWidth: 3)
+                    .frame(width: thumbDiameter, height: thumbDiameter)
+                    .shadow(color: .black.opacity(0.16), radius: 2, y: 1)
+                    .offset(x: selectableWidth * exerciseFraction)
+            }
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { value in
+                        guard exerciseNames.count > 1, selectableWidth > 0 else {
+                            return
+                        }
+
+                        let fraction = min(
+                            max((value.location.x - thumbRadius) / selectableWidth, 0),
+                            1
+                        )
+                        let index = Int(
+                            (fraction * CGFloat(exerciseNames.count - 1)).rounded()
+                        )
+                        selectionAction(index)
+                    }
+            )
+        }
+        .frame(height: 28)
+        .accessibilityElement()
+        .accessibilityLabel("Exercise position and set progress")
+        .accessibilityValue(
+            "\(exerciseNames[currentExerciseIndex]), "
+                + "exercise \(currentExerciseIndex + 1) of \(exerciseNames.count), "
+                + "\(completedSetCount) of \(totalSetCount) sets completed"
+        )
+        .accessibilityAdjustableAction { direction in
+            switch direction {
+            case .increment:
+                selectionAction(
+                    min(currentExerciseIndex + 1, exerciseNames.count - 1)
+                )
+            case .decrement:
+                selectionAction(max(currentExerciseIndex - 1, 0))
+            @unknown default:
+                break
+            }
         }
     }
 }

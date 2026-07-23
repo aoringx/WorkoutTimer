@@ -23,11 +23,11 @@ enum DefaultTimerDatabase {
                 "Pseudo Planche Push-Ups",
                 "Handstand Push-Ups",
                 "Pike Push-Ups",
+                "Dips",
                 "Russian Push-Ups",
                 "Diamond Push-Ups",
                 "Tricep Extensions",
-                "Push-Ups",
-                "Dips"
+                "Push-Ups"
             ]
         ),
         TimerDefinition(
@@ -35,10 +35,13 @@ enum DefaultTimerDatabase {
             exerciseNames: [
                 "Assisted Muscle-Ups",
                 "Pull-Ups",
+                "Pull-Up Negatives",
                 "Assisted Pull-Ups",
                 "Chin-Ups",
+                "Chin-Up Negatives",
                 "Assisted Chin-Ups",
                 "Tuck Front Lever",
+                "Assisted Front Lever",
                 "Dead Hangs",
                 "Pistol Squats",
                 "Squats",
@@ -55,8 +58,9 @@ enum DefaultTimerDatabase {
                 "Wall Handstand Holds",
                 "Crow Pose",
                 "Pike Push-Ups",
-                "Tuck L-Sit",
                 "L-Sit Extensions",
+                "Tuck L-Sit",
+                "L-Sit Leg Raises",
                 "Hanging Leg Raises",
                 "Leg Raises",
                 "Hollow Body Holds",
@@ -66,7 +70,7 @@ enum DefaultTimerDatabase {
     ]
 
     // Increment this when the default timer collection changes.
-    private static let version = 2
+    private static let version = 3
     private static let installedVersionKey = "database.defaultTimerContentVersion"
 
     static func installIfNeeded(in modelContext: ModelContext) throws {

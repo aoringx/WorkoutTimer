@@ -20,7 +20,7 @@ enum AppSettingDefault {
     static let soundEnabled = true
     static let countdownBeepsEnabled = true
     static let hapticsEnabled = true
-    static let autoStartNextSet = false
+    static let autoStartNextSet = true
     static let keepScreenAwake = true
     static let sets = 3
     static let reps = 5
