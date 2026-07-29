@@ -26,19 +26,20 @@ enum DefaultExerciseDatabase {
             // Pull
             ExerciseItem(name: "Assisted Muscle-Ups", category: .pull, numberOfSets: 3, numberOfReps: 1, restSeconds: 60),
             ExerciseItem(name: "Pull-Ups", category: .pull, numberOfSets: 3, numberOfReps: 2, restSeconds: 60),
-            ExerciseItem(name: "Pull-Up Negatives", category: .pull, numberOfSets: 3, numberOfReps: 2, restSeconds: 60),
-            ExerciseItem(name: "Assisted Pull-Ups", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
+            ExerciseItem(name: "Pull-Up Negatives", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
+            ExerciseItem(name: "Assisted Pull-Ups", category: .pull, numberOfSets: 3, numberOfReps: 5, restSeconds: 60),
+            ExerciseItem(name: "Inverted Rows", category: .pull, numberOfSets: 3, numberOfReps: 7, restSeconds: 60),
             ExerciseItem(name: "Chin-Ups", category: .pull, numberOfSets: 3, numberOfReps: 2, restSeconds: 60),
-            ExerciseItem(name: "Chin-Up Negatives", category: .pull, numberOfSets: 3, numberOfReps: 2, restSeconds: 60),
-            ExerciseItem(name: "Assisted Chin-Ups", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
-            ExerciseItem(name: "Tuck Front Lever", category: .pull, numberOfSets: 3, numberOfReps: 5, restSeconds: 60),
+            ExerciseItem(name: "Chin-Up Negatives", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
+            ExerciseItem(name: "Assisted Chin-Ups", category: .pull, numberOfSets: 3, numberOfReps: 5, restSeconds: 60),
+            ExerciseItem(name: "Tuck Front Lever", category: .pull, numberOfSets: 3, numberOfReps: 6, restSeconds: 60),
             ExerciseItem(name: "Assisted Front Lever", category: .pull, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Dead Hangs", category: .pull, numberOfSets: 3, numberOfReps: 15, restSeconds: 60),
+            ExerciseItem(name: "Dead Hangs", category: .pull, numberOfSets: 3, numberOfReps: 20, restSeconds: 60),
 
             // Legs
             ExerciseItem(name: "Pistol Squats", category: .legs, numberOfSets: 3, numberOfReps: 7, restSeconds: 90),
-            ExerciseItem(name: "Squats", category: .legs, numberOfSets: 3, numberOfReps: 24, restSeconds: 90),
-            ExerciseItem(name: "Lunges", category: .legs, numberOfSets: 3, numberOfReps: 16, restSeconds: 90),
+            ExerciseItem(name: "Squats", category: .legs, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
+            ExerciseItem(name: "Lunges", category: .legs, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
             ExerciseItem(name: "Calf Raises", category: .legs, numberOfSets: 3, numberOfReps: 10, restSeconds: 90),
 
             // Handstand
@@ -61,7 +62,7 @@ enum DefaultExerciseDatabase {
     }
 
     // Increment this when the default exercise collection changes.
-    private static let version = 3
+    private static let version = 6
     private static let installedVersionKey = "database.defaultExerciseContentVersion"
 
     static func installIfNeeded(in modelContext: ModelContext) throws {
@@ -71,17 +72,37 @@ enum DefaultExerciseDatabase {
         guard installedVersion < version else { return }
 
         let savedExercises = try modelContext.fetch(FetchDescriptor<ExerciseItem>())
-        var savedNames = Set(savedExercises.map { $0.name.normalizedForComparison })
+        let savedExercisesByName = Dictionary(
+            grouping: savedExercises,
+            by: { $0.name.normalizedForComparison }
+        )
+        let shouldInstallMissingDefaults = installedVersion == 0
+            && savedExercises.isEmpty
 
         for exercise in exercises {
-            guard savedNames.insert(exercise.name.normalizedForComparison).inserted else {
-                continue
+            let normalizedName = exercise.name.normalizedForComparison
+
+            if let matchingExercises = savedExercisesByName[normalizedName] {
+                for savedExercise in matchingExercises {
+                    overwrite(savedExercise, with: exercise)
+                }
+            } else if shouldInstallMissingDefaults {
+                modelContext.insert(exercise)
             }
-            modelContext.insert(exercise)
         }
 
         try modelContext.save()
         UserDefaults.standard.set(version, forKey: installedVersionKey)
     }
 
+    private static func overwrite(
+        _ savedExercise: ExerciseItem,
+        with defaultExercise: ExerciseItem
+    ) {
+        savedExercise.name = defaultExercise.name
+        savedExercise.category = defaultExercise.category
+        savedExercise.numberOfSets = defaultExercise.numberOfSets
+        savedExercise.numberOfReps = defaultExercise.numberOfReps
+        savedExercise.restSeconds = defaultExercise.restSeconds
+    }
 }

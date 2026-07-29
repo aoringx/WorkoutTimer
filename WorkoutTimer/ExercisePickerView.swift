@@ -50,7 +50,7 @@ struct ExercisePickerView: View {
                     ContentUnavailableView {
                         Label("Exercise Library Is Empty", systemImage: "books.vertical")
                     } description: {
-                        Text("Create exercises before adding them to a timer.")
+                        Text("Create exercises before adding them to a workout.")
                     } actions: {
                         NavigationLink("Manage Exercises") {
                             ExercisesOptionsView()
@@ -71,53 +71,37 @@ struct ExercisePickerView: View {
                         Button {
                             toggleSelection(for: exercise)
                         } label: {
-                            HStack(spacing: 12) {
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text(exercise.name)
-                                        .font(.headline)
-                                        .foregroundStyle(.primary)
+                            HStack(spacing: 10) {
+                                ExerciseSummaryContent(
+                                    name: exercise.name,
+                                    category: exercise.category,
+                                    sets: exercise.numberOfSets,
+                                    reps: exercise.numberOfReps,
+                                    restSeconds: exercise.restSeconds
+                                )
 
-                                    Text(
-                                        "\(exercise.exerciseCategory.rawValue) • "
-                                            + "\(exercise.numberOfSets) sets × "
-                                            + "\(exercise.numberOfReps) reps/seconds"
-                                    )
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                }
-
-                                Spacer()
-
-                                if isAlreadyAdded {
-                                    Text("Added")
-                                        .font(.caption.weight(.medium))
-                                        .foregroundStyle(.secondary)
-                                } else if let selectionNumber {
-                                    Text("\(selectionNumber)")
-                                        .font(.caption.bold())
-                                        .foregroundStyle(.white)
-                                        .frame(width: 24, height: 24)
-                                        .background(.tint, in: Circle())
-                                        .accessibilityLabel(
-                                            "Selected number \(selectionNumber)"
-                                        )
-                                } else {
-                                    Image(systemName: "circle")
-                                        .foregroundStyle(.tertiary)
-                                        .accessibilityLabel("Not selected")
-                                }
+                                selectionStatus(
+                                    isAlreadyAdded: isAlreadyAdded,
+                                    selectionNumber: selectionNumber
+                                )
                             }
                             .contentShape(Rectangle())
+                            .accessibilityElement(children: .combine)
                         }
                         .buttonStyle(.plain)
                         .disabled(isAlreadyAdded)
                     }
                     .listStyle(.insetGrouped)
+                    .appListBackground(tint: AppTheme.energy)
                 }
+            }
+            .background {
+                AppBackdrop(tint: AppTheme.energy)
             }
             .navigationTitle("Add Exercises")
             .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $searchText, prompt: "Search exercises")
+            .tint(AppTheme.brand)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -139,6 +123,36 @@ struct ExercisePickerView: View {
     private var addButtonTitle: String {
         guard selectedExerciseIDs.count > 1 else { return "Add" }
         return "Add \(selectedExerciseIDs.count)"
+    }
+
+    @ViewBuilder
+    private func selectionStatus(
+        isAlreadyAdded: Bool,
+        selectionNumber: Int?
+    ) -> some View {
+        if isAlreadyAdded {
+            Label("Added", systemImage: "checkmark")
+                .font(.caption2.weight(.bold))
+                .foregroundStyle(AppTheme.success)
+                .lineLimit(1)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .background(AppTheme.success.opacity(0.12), in: Capsule())
+        } else if let selectionNumber {
+            Text("\(selectionNumber)")
+                .font(.caption.weight(.bold))
+                .monospacedDigit()
+                .foregroundStyle(.white)
+                .padding(.horizontal, 9)
+                .frame(minHeight: 28)
+                .background(AppTheme.brandGradient, in: Capsule())
+                .accessibilityLabel("Selected number \(selectionNumber)")
+        } else {
+            Image(systemName: "circle")
+                .font(.title3)
+                .foregroundStyle(.tertiary)
+                .accessibilityLabel("Not selected")
+        }
     }
 
     private func toggleSelection(for exercise: ExerciseItem) {

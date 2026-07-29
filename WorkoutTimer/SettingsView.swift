@@ -35,12 +35,30 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                Toggle("Sound Effects", isOn: $soundEnabled)
+                Toggle(isOn: $soundEnabled) {
+                    SettingsRowLabel(
+                        title: "Sound Effects",
+                        systemImage: "speaker.wave.2.fill",
+                        tint: AppTheme.electricBlue
+                    )
+                }
 
-                Toggle("Countdown Beeps", isOn: $countdownBeepsEnabled)
+                Toggle(isOn: $countdownBeepsEnabled) {
+                    SettingsRowLabel(
+                        title: "Countdown Beeps",
+                        systemImage: "metronome",
+                        tint: AppTheme.energy
+                    )
+                }
                     .disabled(!soundEnabled)
 
-                Toggle("Haptic Feedback", isOn: $hapticsEnabled)
+                Toggle(isOn: $hapticsEnabled) {
+                    SettingsRowLabel(
+                        title: "Haptic Feedback",
+                        systemImage: "waveform.path",
+                        tint: AppTheme.brand
+                    )
+                }
             } header: {
                 Text("Audio & Feedback")
             } footer: {
@@ -48,10 +66,23 @@ struct SettingsView: View {
             }
 
             Section {
-                Toggle("Automatically Start Next Set", isOn: $autoStartNextSet)
-                Toggle("Keep Screen Awake During Timers", isOn: $keepScreenAwake)
+                Toggle(isOn: $autoStartNextSet) {
+                    SettingsRowLabel(
+                        title: "Automatically Start Next Set",
+                        systemImage: "forward.fill",
+                        tint: AppTheme.success
+                    )
+                }
+
+                Toggle(isOn: $keepScreenAwake) {
+                    SettingsRowLabel(
+                        title: "Keep Screen Awake During Workouts",
+                        systemImage: "sun.max.fill",
+                        tint: AppTheme.energy
+                    )
+                }
             } header: {
-                Text("Timer Behavior")
+                Text("Workout Behavior")
             } footer: {
                 Text(
                     "Auto-start advances to the next set or exercise as soon as rest ends."
@@ -59,18 +90,57 @@ struct SettingsView: View {
             }
 
             Section {
-                Stepper("Sets: \(defaultSets)", value: $defaultSets, in: 1...20)
+                Stepper(value: $defaultSets, in: 1...20) {
+                    HStack {
+                        SettingsRowLabel(
+                            title: "Sets",
+                            systemImage: "square.stack.3d.up",
+                            tint: AppTheme.brand
+                        )
+
+                        Spacer()
+
+                        Text("\(defaultSets)")
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                }
+
+                Stepper(value: $defaultReps, in: 1...100) {
+                    HStack {
+                        SettingsRowLabel(
+                            title: "Reps / Seconds",
+                            systemImage: "repeat",
+                            tint: AppTheme.electricBlue
+                        )
+
+                        Spacer()
+
+                        Text("\(defaultReps)")
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                }
+
                 Stepper(
-                    "Reps/Seconds: \(defaultReps)",
-                    value: $defaultReps,
-                    in: 1...100
-                )
-                Stepper(
-                    "Rest Time: \(restTimeDescription)",
                     value: $defaultRestSeconds,
                     in: 0...600,
                     step: 5
-                )
+                ) {
+                    HStack {
+                        SettingsRowLabel(
+                            title: "Rest Time",
+                            systemImage: "timer",
+                            tint: AppTheme.rest
+                        )
+
+                        Spacer()
+
+                        Text(restTimeDescription)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                }
             } header: {
                 Text("New Exercise Defaults")
             } footer: {
@@ -78,11 +148,19 @@ struct SettingsView: View {
             }
 
             Section {
-                Button("Restore Default Settings", role: .destructive) {
+                Button(role: .destructive) {
                     isResetConfirmationPresented = true
+                } label: {
+                    SettingsRowLabel(
+                        title: "Restore Default Settings",
+                        systemImage: "arrow.counterclockwise",
+                        tint: AppTheme.rest
+                    )
                 }
             }
         }
+        .appListBackground(tint: AppTheme.electricBlue)
+        .tint(AppTheme.brand)
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .alert(

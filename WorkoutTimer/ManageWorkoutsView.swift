@@ -1,19 +1,19 @@
 //
-//  ManageTimersView.swift
+//  ManageWorkoutsView.swift
 //  WorkoutTimer
 //
 
 import SwiftUI
 import SwiftData
 
-struct ManageTimersView: View {
+struct ManageWorkoutsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var timers: [WorkoutTimerItem]
 
     @State private var updateError: Error?
 
     @AppStorage(AppSettingKey.timerSortOption)
-    private var sortOption = TimerSortOption.recentlyUpdated
+    private var sortOption = WorkoutSortOption.recentlyUpdated
 
     private var orderedTimers: [WorkoutTimerItem] {
         sortOption.sorted(timers)
@@ -23,17 +23,17 @@ struct ManageTimersView: View {
         Group {
             if timers.isEmpty {
                 ContentUnavailableView(
-                    "No Saved Timers",
+                    "No Saved Workouts",
                     systemImage: "timer",
-                    description: Text("Timers you save will appear here.")
+                    description: Text("Workouts you save will appear here.")
                 )
             } else {
                 List {
                     ForEach(orderedTimers) { timer in
                         NavigationLink {
-                            EditTimerView(timer: timer)
+                            EditWorkoutView(timer: timer)
                         } label: {
-                            SavedTimerRow(timer: timer)
+                            SavedWorkoutRow(timer: timer)
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             Button {
@@ -44,27 +44,32 @@ struct ManageTimersView: View {
                                     systemImage: timer.isPinned ? "pin.slash" : "pin"
                                 )
                             }
-                            .tint(timer.isPinned ? .gray : .orange)
+                            .tint(timer.isPinned ? .gray : AppTheme.energy)
                         }
                     }
                     .onDelete(perform: deleteTimers)
                     .onMove(perform: moveTimers)
                 }
                 .listStyle(.insetGrouped)
+                .appListBackground(tint: AppTheme.electricBlue)
             }
         }
-        .navigationTitle("Manage Timers")
+        .background {
+            AppBackdrop(tint: AppTheme.electricBlue)
+        }
+        .navigationTitle("Manage Workouts")
         .navigationBarTitleDisplayMode(.inline)
+        .tint(AppTheme.brand)
         .toolbar {
             if !timers.isEmpty {
                 ToolbarItemGroup(placement: .topBarTrailing) {
-                    TimerSortMenu(selection: $sortOption)
+                    WorkoutSortMenu(selection: $sortOption)
                     EditButton()
                 }
             }
         }
         .alert(
-            "Couldn’t Update Timer",
+            "Couldn’t Update Workout",
             isPresented: Binding(
                 get: { updateError != nil },
                 set: { if !$0 { updateError = nil } }

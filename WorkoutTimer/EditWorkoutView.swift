@@ -1,12 +1,12 @@
 //
-//  EditTimerView.swift
+//  EditWorkoutView.swift
 //  WorkoutTimer
 //
 
 import SwiftData
 import SwiftUI
 
-struct EditTimerView: View {
+struct EditWorkoutView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query private var savedTimers: [WorkoutTimerItem]
@@ -46,19 +46,56 @@ struct EditTimerView: View {
             && !isDuplicateTimerName
     }
 
+    private var totalSetCount: Int {
+        exercises.reduce(0) { $0 + $1.numberOfSets }
+    }
+
     var body: some View {
         List {
-            Section("Timer") {
-                TextField("Timer Name", text: $timerName)
-                    .textInputAutocapitalization(.words)
+            Section("Workout Details") {
+                VStack(alignment: .leading, spacing: 10) {
+                    SettingsRowLabel(
+                        title: "Workout Name",
+                        systemImage: "textformat",
+                        tint: AppTheme.brand
+                    )
+
+                    TextField("Name your workout", text: $timerName)
+                        .font(.headline)
+                        .textInputAutocapitalization(.words)
+                }
 
                 if isDuplicateTimerName {
                     Label(
-                        "A timer with this name already exists.",
+                        "A workout with this name already exists.",
                         systemImage: "exclamationmark.triangle.fill"
                     )
                     .font(.caption)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(AppTheme.energy)
+                }
+
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 8) {
+                        MetricChip(
+                            text: "\(exercises.count) exercises",
+                            systemImage: "figure.strengthtraining.traditional"
+                        )
+                        MetricChip(
+                            text: "\(totalSetCount) sets",
+                            systemImage: "square.stack.3d.up"
+                        )
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        MetricChip(
+                            text: "\(exercises.count) exercises",
+                            systemImage: "figure.strengthtraining.traditional"
+                        )
+                        MetricChip(
+                            text: "\(totalSetCount) sets",
+                            systemImage: "square.stack.3d.up"
+                        )
+                    }
                 }
             }
 
@@ -69,17 +106,23 @@ struct EditTimerView: View {
                 .onDelete(perform: removeExercises)
                 .onMove(perform: moveExercises)
 
-                Button("Add Exercises") {
+                Button {
                     isExercisePickerPresented = true
+                } label: {
+                    Label("Add Exercises", systemImage: "plus.circle.fill")
+                        .font(.headline)
+                        .foregroundStyle(AppTheme.brand)
                 }
             } header: {
-                Text("Exercises")
+                Text("Exercise Order")
             } footer: {
                 Text("Use Edit to remove or reorder exercises.")
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("Edit Timer")
+        .appListBackground(tint: AppTheme.brand)
+        .tint(AppTheme.brand)
+        .navigationTitle("Edit Workout")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .topBarTrailing) {
@@ -107,7 +150,7 @@ struct EditTimerView: View {
             }
         }
         .alert(
-            "Couldn’t Save Timer",
+            "Couldn’t Save Workout",
             isPresented: Binding(
                 get: { saveError != nil },
                 set: { if !$0 { saveError = nil } }
@@ -166,7 +209,6 @@ private struct TimerExerciseDraft: Identifiable {
     let id: UUID
     let exerciseName: String
     let category: String
-    let notes: String
     let numberOfSets: Int
     let numberOfReps: Int
     let restSeconds: Int
@@ -175,7 +217,6 @@ private struct TimerExerciseDraft: Identifiable {
         id = exercise.id
         exerciseName = exercise.exerciseName
         category = exercise.category
-        notes = exercise.notes
         numberOfSets = exercise.numberOfSets
         numberOfReps = exercise.numberOfReps
         restSeconds = exercise.restSeconds
@@ -185,7 +226,6 @@ private struct TimerExerciseDraft: Identifiable {
         id = UUID()
         exerciseName = exercise.name
         category = exercise.exerciseCategory.rawValue
-        notes = exercise.notes
         numberOfSets = exercise.numberOfSets
         numberOfReps = exercise.numberOfReps
         restSeconds = exercise.restSeconds
@@ -196,7 +236,6 @@ private struct TimerExerciseDraft: Identifiable {
             position: position,
             exerciseName: exerciseName,
             category: category,
-            notes: notes,
             numberOfSets: numberOfSets,
             numberOfReps: numberOfReps,
             restSeconds: restSeconds
@@ -208,33 +247,12 @@ private struct TimerExerciseDraftRow: View {
     let exercise: TimerExerciseDraft
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(exercise.exerciseName)
-                    .font(.headline)
-
-                Spacer()
-
-                Text(exercise.category)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
-            }
-
-            Text(
-                "\(exercise.numberOfSets) sets × "
-                    + "\(exercise.numberOfReps) reps/seconds • "
-                    + "\(exercise.restSeconds) sec rest"
-            )
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-
-            if !exercise.notes.isEmpty {
-                Text(exercise.notes)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-            }
-        }
-        .padding(.vertical, 4)
+        ExerciseSummaryContent(
+            name: exercise.exerciseName,
+            category: exercise.category,
+            sets: exercise.numberOfSets,
+            reps: exercise.numberOfReps,
+            restSeconds: exercise.restSeconds
+        )
     }
 }

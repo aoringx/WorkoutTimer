@@ -35,7 +35,6 @@ struct ExercisesOptionsView: View {
                 || exercise.exerciseCategory == selectedCategory
             let matchesSearch = searchText.isEmpty
                 || exercise.name.localizedStandardContains(searchText)
-                || exercise.notes.localizedStandardContains(searchText)
 
             return matchesCategory && matchesSearch
         }
@@ -77,10 +76,16 @@ struct ExercisesOptionsView: View {
                     .onDelete(perform: deleteExercises)
                 }
                 .listStyle(.insetGrouped)
+                .appListBackground(tint: AppTheme.energy)
             }
         }
+        .background {
+            AppBackdrop(tint: AppTheme.energy)
+        }
         .navigationTitle("Exercises")
+        .navigationBarTitleDisplayMode(.inline)
         .searchable(text: $searchText, prompt: "Search exercises")
+        .tint(AppTheme.energy)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Menu {
@@ -213,37 +218,19 @@ private struct ExerciseRow: View {
     let exercise: ExerciseItem
 
     var body: some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(exercise.name)
-                    .font(.headline)
-                    .foregroundStyle(.primary)
-
-                Text(exercise.exerciseCategory.rawValue)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
-                Text(
-                    "\(exercise.numberOfSets) sets × "
-                        + "\(exercise.numberOfReps) reps/seconds • "
-                        + "\(exercise.restSeconds) sec rest"
-                )
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-                if !exercise.notes.isEmpty {
-                    Text(exercise.notes)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
-            }
-
-            Spacer()
+        HStack(spacing: 10) {
+            ExerciseSummaryContent(
+                name: exercise.name,
+                category: exercise.category,
+                sets: exercise.numberOfSets,
+                reps: exercise.numberOfReps,
+                restSeconds: exercise.restSeconds
+            )
 
             Image(systemName: "chevron.right")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
         }
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)

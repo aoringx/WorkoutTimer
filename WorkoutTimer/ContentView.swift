@@ -14,40 +14,59 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                Text("Aaron's\nCalisthenics Timer")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.center)
+            ZStack {
+                AppBackdrop()
+
+                ScrollView {
+                    VStack(spacing: 30) {
+                        Text("Aaron’s Calisthenics")
+                            .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+
+                        VStack(spacing: 14) {
+                            NavigationLink {
+                                WorkoutsView()
+                            } label: {
+                                AppNavigationCard(
+                                    title: "Workouts",
+                                    systemImage: "timer",
+                                    tint: AppTheme.brand
+                                )
+                            }
+
+                            NavigationLink {
+                                ExercisesOptionsView()
+                            } label: {
+                                AppNavigationCard(
+                                    title: "Exercise Library",
+                                    systemImage: "figure.strengthtraining.traditional",
+                                    tint: AppTheme.energy
+                                )
+                            }
+
+                            NavigationLink {
+                                SettingsView()
+                            } label: {
+                                AppNavigationCard(
+                                    title: "Settings",
+                                    systemImage: "slider.horizontal.3",
+                                    tint: AppTheme.electricBlue
+                                )
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .frame(maxWidth: 640)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 52)
+                    .padding(.bottom, 32)
                     .frame(maxWidth: .infinity)
-
-                NavigationLink {
-                    TimersOptionsView()
-                } label: {
-                    Label("Timers", systemImage: "timer")
-                        .frame(width: 180)
                 }
-                .buttonStyle(.bordered)
-
-                NavigationLink {
-                    ExercisesOptionsView()
-                } label: {
-                    Label("Exercises", systemImage: "figure.strengthtraining.traditional")
-                        .frame(width: 180)
-                }
-                .buttonStyle(.bordered)
-
-                NavigationLink {
-                    SettingsView()
-                } label: {
-                    Label("Settings", systemImage: "gearshape")
-                        .frame(width: 180)
-                }
-                .buttonStyle(.bordered)
-
             }
-            .padding()
+            .navigationBarHidden(true)
         }
+        .tint(AppTheme.brand)
         .task {
             installDefaultData()
         }
@@ -71,9 +90,10 @@ struct ContentView: View {
     private func installDefaultData() {
         do {
             try DefaultExerciseDatabase.installIfNeeded(in: modelContext)
-            try DefaultTimerDatabase.installIfNeeded(in: modelContext)
+            try DefaultWorkoutDatabase.installIfNeeded(in: modelContext)
             initializationError = nil
         } catch {
+            modelContext.rollback()
             initializationError = error
         }
     }

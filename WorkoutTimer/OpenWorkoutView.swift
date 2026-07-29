@@ -1,16 +1,16 @@
 //
-//  OpenTimerView.swift
+//  OpenWorkoutView.swift
 //  WorkoutTimer
 //
 
 import SwiftUI
 import SwiftData
 
-struct OpenTimerView: View {
+struct OpenWorkoutView: View {
     @Query private var timers: [WorkoutTimerItem]
 
     @AppStorage(AppSettingKey.timerSortOption)
-    private var sortOption = TimerSortOption.recentlyUpdated
+    private var sortOption = WorkoutSortOption.recentlyUpdated
 
     private var orderedTimers: [WorkoutTimerItem] {
         sortOption.sorted(timers)
@@ -20,27 +20,32 @@ struct OpenTimerView: View {
         Group {
             if timers.isEmpty {
                 ContentUnavailableView(
-                    "No Saved Timers",
+                    "No Saved Workouts",
                     systemImage: "timer",
-                    description: Text("Create and save a timer to open it here.")
+                    description: Text("Create and save a workout to open it here.")
                 )
             } else {
                 List(orderedTimers) { timer in
                     NavigationLink {
-                        TimerRunnerView(timer: timer)
+                        WorkoutRunnerView(timer: timer)
                     } label: {
-                        SavedTimerRow(timer: timer)
+                        SavedWorkoutRow(timer: timer)
                     }
                 }
                 .listStyle(.insetGrouped)
+                .appListBackground()
             }
         }
-        .navigationTitle("Open Timer")
+        .background {
+            AppBackdrop()
+        }
+        .navigationTitle("Start Workout")
         .navigationBarTitleDisplayMode(.inline)
+        .tint(AppTheme.brand)
         .toolbar {
             if !timers.isEmpty {
                 ToolbarItem(placement: .topBarTrailing) {
-                    TimerSortMenu(selection: $sortOption)
+                    WorkoutSortMenu(selection: $sortOption)
                 }
             }
         }

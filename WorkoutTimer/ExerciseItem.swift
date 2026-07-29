@@ -22,7 +22,6 @@ final class ExerciseItem: Identifiable {
     @Attribute(.unique) var id: UUID
     var name: String
     var category: String
-    var notes: String
     var numberOfSets: Int = 3
     var numberOfReps: Int = 10
     var restSeconds: Int = 60
@@ -32,7 +31,6 @@ final class ExerciseItem: Identifiable {
         id: UUID = UUID(),
         name: String,
         category: ExerciseCategory = .push,
-        notes: String = "",
         numberOfSets: Int = 3,
         numberOfReps: Int = 10,
         restSeconds: Int = 60,
@@ -41,7 +39,6 @@ final class ExerciseItem: Identifiable {
         self.id = id
         self.name = name
         self.category = category.rawValue
-        self.notes = notes
         self.numberOfSets = numberOfSets
         self.numberOfReps = numberOfReps
         self.restSeconds = restSeconds

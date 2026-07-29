@@ -1,5 +1,5 @@
 //
-//  TimerExerciseItem.swift
+//  WorkoutExerciseItem.swift
 //  WorkoutTimer
 //
 
@@ -12,7 +12,6 @@ final class TimerExerciseItem: Identifiable {
     var position: Int
     var exerciseName: String
     var category: String
-    var notes: String
     var numberOfSets: Int
     var numberOfReps: Int
     var restSeconds: Int
@@ -23,7 +22,6 @@ final class TimerExerciseItem: Identifiable {
         position: Int,
         exerciseName: String,
         category: String,
-        notes: String,
         numberOfSets: Int,
         numberOfReps: Int,
         restSeconds: Int,
@@ -33,7 +31,6 @@ final class TimerExerciseItem: Identifiable {
         self.position = position
         self.exerciseName = exerciseName
         self.category = category
-        self.notes = notes
         self.numberOfSets = numberOfSets
         self.numberOfReps = numberOfReps
         self.restSeconds = restSeconds
@@ -45,7 +42,6 @@ final class TimerExerciseItem: Identifiable {
             position: position,
             exerciseName: exercise.name,
             category: exercise.exerciseCategory.rawValue,
-            notes: exercise.notes,
             numberOfSets: exercise.numberOfSets,
             numberOfReps: exercise.numberOfReps,
             restSeconds: exercise.restSeconds

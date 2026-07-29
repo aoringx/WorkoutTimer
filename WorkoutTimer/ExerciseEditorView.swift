@@ -18,7 +18,6 @@ struct ExerciseEditorView: View {
     @State private var numberOfSets: Int
     @State private var numberOfReps: Int
     @State private var restSeconds: Int
-    @State private var notes: String
     @State private var saveError: Error?
 
     private var trimmedName: String {
@@ -45,58 +44,100 @@ struct ExerciseEditorView: View {
         _numberOfSets = State(initialValue: exercise?.numberOfSets ?? defaultSets)
         _numberOfReps = State(initialValue: exercise?.numberOfReps ?? defaultReps)
         _restSeconds = State(initialValue: exercise?.restSeconds ?? defaultRestSeconds)
-        _notes = State(initialValue: exercise?.notes ?? "")
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Exercise") {
-                    TextField("Name", text: $name)
-                        .textInputAutocapitalization(.words)
+                Section("Exercise Details") {
+                    VStack(alignment: .leading, spacing: 10) {
+                        SettingsRowLabel(
+                            title: "Name",
+                            systemImage: "textformat",
+                            tint: category.themeTint
+                        )
 
-                    Picker("Type", selection: $category) {
+                        TextField("Exercise name", text: $name)
+                            .font(.headline)
+                    }
+                    .textInputAutocapitalization(.words)
+
+                    Picker(selection: $category) {
                         ForEach(ExerciseCategory.allCases) { category in
                             Text(category.rawValue)
                                 .tag(category)
                         }
+                    } label: {
+                        Text("Type")
                     }
-                }
 
-                Section("Workout Settings") {
-                    Stepper("Sets: \(numberOfSets)", value: $numberOfSets, in: 1...20)
-                    Stepper(
-                        "Reps/Seconds: \(numberOfReps)",
-                        value: $numberOfReps,
-                        in: 1...100
-                    )
-                    Stepper(
-                        "Rest Time: \(restTimeDescription)",
-                        value: $restSeconds,
-                        in: 0...600,
-                        step: 30
-                    )
-                }
-
-                Section("Notes") {
-                    TextField(
-                        "Instructions, equipment, or other details",
-                        text: $notes,
-                        axis: .vertical
-                    )
-                    .lineLimit(3...8)
-                }
-
-                if isDuplicate {
-                    Section {
+                    if isDuplicate {
                         Label(
                             "An exercise with this name already exists.",
                             systemImage: "exclamationmark.triangle.fill"
                         )
-                        .foregroundStyle(.orange)
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.energy)
                     }
                 }
+
+                Section("Workout Settings") {
+                    Stepper(value: $numberOfSets, in: 1...20) {
+                        HStack {
+                            SettingsRowLabel(
+                                title: "Sets",
+                                systemImage: "square.stack.3d.up",
+                                tint: AppTheme.brand
+                            )
+
+                            Spacer()
+
+                            Text("\(numberOfSets)")
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                    }
+
+                    Stepper(value: $numberOfReps, in: 1...100) {
+                        HStack {
+                            SettingsRowLabel(
+                                title: "Reps / Seconds",
+                                systemImage: "repeat",
+                                tint: AppTheme.electricBlue
+                            )
+
+                            Spacer()
+
+                            Text("\(numberOfReps)")
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                    }
+
+                    Stepper(
+                        value: $restSeconds,
+                        in: 0...600,
+                        step: 30
+                    ) {
+                        HStack {
+                            SettingsRowLabel(
+                                title: "Rest Time",
+                                systemImage: "timer",
+                                tint: AppTheme.rest
+                            )
+
+                            Spacer()
+
+                            Text(restTimeDescription)
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                    }
+                }
+
             }
+            .appListBackground(tint: category.themeTint)
+            .tint(category.themeTint)
             .navigationTitle(exercise == nil ? "New Exercise" : "Edit Exercise")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -129,22 +170,18 @@ struct ExerciseEditorView: View {
     }
 
     private func save() {
-        let trimmedNotes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
-
         if let exercise {
             exercise.name = trimmedName
             exercise.exerciseCategory = category
             exercise.numberOfSets = numberOfSets
             exercise.numberOfReps = numberOfReps
             exercise.restSeconds = restSeconds
-            exercise.notes = trimmedNotes
             exercise.updatedAt = Date()
         } else {
             modelContext.insert(
                 ExerciseItem(
                     name: trimmedName,
                     category: category,
-                    notes: trimmedNotes,
                     numberOfSets: numberOfSets,
                     numberOfReps: numberOfReps,
                     restSeconds: restSeconds

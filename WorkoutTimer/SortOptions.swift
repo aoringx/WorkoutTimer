@@ -54,7 +54,7 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
     }
 }
 
-enum TimerSortOption: String, CaseIterable, Identifiable {
+enum WorkoutSortOption: String, CaseIterable, Identifiable {
     case recentlyUpdated
     case name
     case manual
@@ -103,13 +103,13 @@ enum TimerSortOption: String, CaseIterable, Identifiable {
     }
 }
 
-struct TimerSortMenu: View {
-    @Binding var selection: TimerSortOption
+struct WorkoutSortMenu: View {
+    @Binding var selection: WorkoutSortOption
 
     var body: some View {
         Menu {
             Picker("Sort By", selection: $selection) {
-                ForEach(TimerSortOption.allCases) { option in
+                ForEach(WorkoutSortOption.allCases) { option in
                     Label(option.title, systemImage: option.systemImage)
                         .tag(option)
                 }
@@ -117,7 +117,7 @@ struct TimerSortMenu: View {
         } label: {
             Label("Sort", systemImage: "arrow.up.arrow.down")
         }
-        .accessibilityLabel("Sort timers")
+        .accessibilityLabel("Sort workouts")
     }
 }
 

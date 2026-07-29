@@ -1,5 +1,5 @@
 //
-//  WorkoutTimerApp.swift
+//  WorkoutApp.swift
 //  WorkoutTimer
 //
 //  Created by Feiyang Xiong on 7/18/26.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct WorkoutTimerApp: App {
+struct WorkoutApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

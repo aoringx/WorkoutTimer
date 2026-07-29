@@ -1,12 +1,12 @@
 //
-//  GenerateTimerView.swift
+//  CreateWorkoutView.swift
 //  WorkoutTimer
 //
 
 import SwiftUI
 import SwiftData
 
-struct GenerateTimerView: View {
+struct CreateWorkoutView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query private var savedTimers: [WorkoutTimerItem]
@@ -33,10 +33,15 @@ struct GenerateTimerView: View {
             && !isDuplicateTimerName
     }
 
+    private var totalSetCount: Int {
+        selectedExercises.reduce(0) { $0 + $1.numberOfSets }
+    }
+
     var body: some View {
         content
-        .navigationTitle("Generate New Timer")
+        .navigationTitle("Create Workout")
         .navigationBarTitleDisplayMode(.inline)
+        .tint(AppTheme.brand)
         .toolbar {
             timerToolbar
         }
@@ -48,7 +53,7 @@ struct GenerateTimerView: View {
             }
         }
         .alert(
-            "Couldn’t Save Timer",
+            "Couldn’t Save Workout",
             isPresented: Binding(
                 get: { saveError != nil },
                 set: { if !$0 { saveError = nil } }
@@ -71,15 +76,19 @@ struct GenerateTimerView: View {
     }
 
     private var emptyState: some View {
-        ContentUnavailableView {
-            Label("No Exercises Added", systemImage: "list.bullet")
-        } description: {
-            Text("Add exercises from your library to build this timer.")
-        } actions: {
-            Button("Add Exercises", systemImage: "plus") {
-                isExercisePickerPresented = true
+        ZStack {
+            AppBackdrop(tint: AppTheme.energy)
+
+            ContentUnavailableView {
+                Label("No Exercises Added", systemImage: "list.bullet")
+            } description: {
+                Text("Add exercises from your library to build this workout.")
+            } actions: {
+                Button("Add Exercises", systemImage: "plus") {
+                    isExercisePickerPresented = true
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .buttonStyle(.borderedProminent)
         }
     }
 
@@ -89,20 +98,54 @@ struct GenerateTimerView: View {
             exercisesSection
         }
         .listStyle(.insetGrouped)
+        .appListBackground(tint: AppTheme.brand)
     }
 
     private var timerDetailsSection: some View {
-        Section("Timer") {
-            TextField("Timer Name", text: $timerName)
-                .textInputAutocapitalization(.words)
+        Section("Workout Details") {
+            VStack(alignment: .leading, spacing: 10) {
+                SettingsRowLabel(
+                    title: "Workout Name",
+                    systemImage: "textformat",
+                    tint: AppTheme.brand
+                )
+
+                TextField("Name your workout", text: $timerName)
+                    .font(.headline)
+                    .textInputAutocapitalization(.words)
+            }
 
             if isDuplicateTimerName {
                 Label(
-                    "A timer with this name already exists.",
+                    "A workout with this name already exists.",
                     systemImage: "exclamationmark.triangle.fill"
                 )
                 .font(.caption)
-                .foregroundStyle(.orange)
+                .foregroundStyle(AppTheme.energy)
+            }
+
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    MetricChip(
+                        text: "\(selectedExercises.count) exercises",
+                        systemImage: "figure.strengthtraining.traditional"
+                    )
+                    MetricChip(
+                        text: "\(totalSetCount) sets",
+                        systemImage: "square.stack.3d.up"
+                    )
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    MetricChip(
+                        text: "\(selectedExercises.count) exercises",
+                        systemImage: "figure.strengthtraining.traditional"
+                    )
+                    MetricChip(
+                        text: "\(totalSetCount) sets",
+                        systemImage: "square.stack.3d.up"
+                    )
+                }
             }
         }
     }
@@ -110,16 +153,20 @@ struct GenerateTimerView: View {
     private var exercisesSection: some View {
         Section {
             ForEach(selectedExercises) { exercise in
-                TimerExerciseRow(exercise: exercise)
+                WorkoutExerciseRow(exercise: exercise)
             }
             .onDelete(perform: removeExercises)
             .onMove(perform: moveExercises)
 
-            Button("Add Exercises") {
+            Button {
                 isExercisePickerPresented = true
+            } label: {
+                Label("Add Exercises", systemImage: "plus.circle.fill")
+                    .font(.headline)
+                    .foregroundStyle(AppTheme.brand)
             }
         } header: {
-            Text("Exercises")
+            Text("Exercise Order")
         } footer: {
             Text("Use Edit to drag exercises into the order they should run.")
         }
@@ -179,38 +226,16 @@ struct GenerateTimerView: View {
     }
 }
 
-private struct TimerExerciseRow: View {
+private struct WorkoutExerciseRow: View {
     let exercise: ExerciseItem
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                Text(exercise.name)
-                    .font(.headline)
-
-                Spacer()
-
-                Text(exercise.exerciseCategory.rawValue)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
-            }
-
-            Text(
-                "\(exercise.numberOfSets) sets × "
-                    + "\(exercise.numberOfReps) reps/seconds • "
-                    + "\(exercise.restSeconds) sec rest"
-            )
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
-
-            if !exercise.notes.isEmpty {
-                Text(exercise.notes)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-            }
-        }
-        .padding(.vertical, 4)
-        .accessibilityElement(children: .combine)
+        ExerciseSummaryContent(
+            name: exercise.name,
+            category: exercise.exerciseCategory.rawValue,
+            sets: exercise.numberOfSets,
+            reps: exercise.numberOfReps,
+            restSeconds: exercise.restSeconds
+        )
     }
 }

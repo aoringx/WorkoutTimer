@@ -1,12 +1,12 @@
 //
-//  RestTimerNotification.swift
+//  RestCountdownNotification.swift
 //  WorkoutTimer
 //
 
 import Foundation
 import UserNotifications
 
-enum RestTimerNotification {
+enum RestCountdownNotification {
     private static var currentRequestID: String?
 
     static func schedule(
