@@ -14,6 +14,7 @@ enum DefaultExerciseDatabase {
             ExerciseItem(name: "Tuck Planche", category: .planche, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
             ExerciseItem(name: "Pseudo Planche Lean", category: .planche, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
             ExerciseItem(name: "Knee Pseudo Planche Lean", category: .planche, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
+            ExerciseItem(name: "Bent-arm Planche", category: .planche, numberOfSets: 3, numberOfReps: 10, restSeconds: 90),
             ExerciseItem(name: "Pseudo Planche Push-Ups", category: .planche, numberOfSets: 3, numberOfReps: 6, restSeconds: 60),
 
             // Push
@@ -39,8 +40,10 @@ enum DefaultExerciseDatabase {
             // Legs
             ExerciseItem(name: "Pistol Squats", category: .legs, numberOfSets: 3, numberOfReps: 7, restSeconds: 90),
             ExerciseItem(name: "Squats", category: .legs, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Lunges", category: .legs, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
+            ExerciseItem(name: "Bulgarian split squats", category: .legs, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
+            ExerciseItem(name: "Reverse Lunges", category: .legs, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
             ExerciseItem(name: "Calf Raises", category: .legs, numberOfSets: 3, numberOfReps: 10, restSeconds: 90),
+            ExerciseItem(name: "Glute bridges", category: .legs, numberOfSets: 3, numberOfReps: 30, restSeconds: 90),
 
             // Handstand
             ExerciseItem(name: "Handstand Push-Ups", category: .handstand, numberOfSets: 5, numberOfReps: 1, restSeconds: 30),
@@ -62,7 +65,7 @@ enum DefaultExerciseDatabase {
     }
 
     // Increment this when the default exercise collection changes.
-    private static let version = 6
+    private static let version = 7
     private static let installedVersionKey = "database.defaultExerciseContentVersion"
 
     static func installIfNeeded(in modelContext: ModelContext) throws {

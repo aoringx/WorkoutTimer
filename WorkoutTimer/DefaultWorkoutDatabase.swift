@@ -15,12 +15,19 @@ enum DefaultWorkoutDatabase {
 
     static let workouts: [WorkoutDefinition] = [
         WorkoutDefinition(
-            name: "Planche and Push",
+            name: "Planche",
             exerciseNames: [
                 "Tuck Planche",
                 "Pseudo Planche Lean",
                 "Knee Pseudo Planche Lean",
-                "Pseudo Planche Push-Ups",
+                "Bent-arm Planche",
+                "Crow Pose",
+                "Pseudo Planche Push-Ups"
+            ]
+        ),
+        WorkoutDefinition(
+            name: "Push",
+            exerciseNames: [
                 "Handstand Push-Ups",
                 "Pike Push-Ups",
                 "Dips",
@@ -31,7 +38,7 @@ enum DefaultWorkoutDatabase {
             ]
         ),
         WorkoutDefinition(
-            name: "Pull and Legs",
+            name: "Pull",
             exerciseNames: [
                 "Assisted Muscle-Ups",
                 "Pull-Ups",
@@ -40,22 +47,33 @@ enum DefaultWorkoutDatabase {
                 "Inverted Rows",
                 "Tuck Front Lever",
                 "Assisted Front Lever",
-                "Dead Hangs",
-                "Pistol Squats",
-                "Squats",
-                "Lunges",
-                "Calf Raises"
+                "Dead Hangs"
             ]
         ),
         WorkoutDefinition(
-            name: "Handstand and Core",
+            name: "Legs",
+            exerciseNames: [
+                "Pistol Squats",
+                "Bulgarian split squats",
+                "Reverse Lunges",
+                "Calf Raises",
+                "Glute bridges"
+            ]
+        ),
+        WorkoutDefinition(
+            name: "Handstand",
             exerciseNames: [
                 "Handstand Push-Ups",
                 "Freestanding Handstand Holds",
                 "Wall Handstand Shoulder Taps",
                 "Wall Handstand Holds",
                 "Crow Pose",
-                "Pike Push-Ups",
+                "Pike Push-Ups"
+            ]
+        ),
+        WorkoutDefinition(
+            name: "Core",
+            exerciseNames: [
                 "L-Sit Extensions",
                 "Tuck L-Sit",
                 "L-Sit Leg Raises",
@@ -68,7 +86,7 @@ enum DefaultWorkoutDatabase {
     ]
 
     // Increment this when the default workout collection changes.
-    private static let version = 6
+    private static let version = 7
     private static let installedVersionKey = "database.defaultTimerContentVersion"
 
     static func installIfNeeded(in modelContext: ModelContext) throws {
