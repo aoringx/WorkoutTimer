@@ -66,6 +66,12 @@ struct SavedWorkoutRow: View {
 
     @ViewBuilder
     private var metricChips: some View {
+        if timer.isCategoryWorkout {
+            MetricChip(
+                text: "Automatic",
+                systemImage: "arrow.triangle.2.circlepath"
+            )
+        }
         MetricChip(
             text: "\(timer.exercises.count) exercises",
             systemImage: "figure.strengthtraining.traditional"

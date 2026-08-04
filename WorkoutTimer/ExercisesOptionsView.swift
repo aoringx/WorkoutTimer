@@ -31,8 +31,9 @@ struct ExercisesOptionsView: View {
 
     private var visibleExercises: [ExerciseItem] {
         let filteredExercises = exercises.filter { exercise in
-            let matchesCategory = selectedCategory == nil
-                || exercise.exerciseCategory == selectedCategory
+            let matchesCategory = selectedCategory.map {
+                exercise.exerciseCategories.contains($0)
+            } ?? true
             let matchesSearch = searchText.isEmpty
                 || exercise.name.localizedStandardContains(searchText)
 
@@ -187,6 +188,7 @@ struct ExercisesOptionsView: View {
 
     private func saveChanges() {
         do {
+            try WorkoutDatabase.rebuild(in: modelContext)
             try modelContext.save()
         } catch {
             modelContext.rollback()
@@ -221,7 +223,7 @@ private struct ExerciseRow: View {
         HStack(spacing: 10) {
             ExerciseSummaryContent(
                 name: exercise.name,
-                category: exercise.category,
+                categories: exercise.exerciseCategories,
                 sets: exercise.numberOfSets,
                 reps: exercise.numberOfReps,
                 restSeconds: exercise.restSeconds

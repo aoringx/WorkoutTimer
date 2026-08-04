@@ -17,7 +17,7 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
         switch self {
         case .recentlyUpdated: "Recently Updated"
         case .name: "Name (A–Z)"
-        case .category: "Type"
+        case .category: "Categories"
         }
     }
 
@@ -41,10 +41,10 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
             case .name:
                 nameComesFirst(first.name, second.name)
             case .category:
-                if first.exerciseCategory != second.exerciseCategory {
+                if categorySortKey(for: first) != categorySortKey(for: second) {
                     nameComesFirst(
-                        first.exerciseCategory.rawValue,
-                        second.exerciseCategory.rawValue
+                        categorySortKey(for: first),
+                        categorySortKey(for: second)
                     )
                 } else {
                     nameComesFirst(first.name, second.name)
@@ -52,6 +52,12 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
             }
         }
     }
+}
+
+private func categorySortKey(for exercise: ExerciseItem) -> String {
+    exercise.exerciseCategories
+        .map(\.rawValue)
+        .joined(separator: ", ")
 }
 
 enum WorkoutSortOption: String, CaseIterable, Identifiable {

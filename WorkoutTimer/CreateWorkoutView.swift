@@ -232,7 +232,7 @@ private struct WorkoutExerciseRow: View {
     var body: some View {
         ExerciseSummaryContent(
             name: exercise.name,
-            category: exercise.exerciseCategory.rawValue,
+            categories: exercise.exerciseCategories,
             sets: exercise.numberOfSets,
             reps: exercise.numberOfReps,
             restSeconds: exercise.restSeconds

@@ -68,10 +68,10 @@ struct ContentView: View {
         }
         .tint(AppTheme.brand)
         .task {
-            installDefaultData()
+            loadDatabases()
         }
         .alert(
-            "Couldn’t Load Default Data",
+            "Couldn’t Load Databases",
             isPresented: Binding(
                 get: { initializationError != nil },
                 set: { if !$0 { initializationError = nil } }
@@ -79,7 +79,7 @@ struct ContentView: View {
             presenting: initializationError
         ) { _ in
             Button("Retry") {
-                installDefaultData()
+                loadDatabases()
             }
             Button("Cancel", role: .cancel) { }
         } message: { error in
@@ -87,10 +87,15 @@ struct ContentView: View {
         }
     }
 
-    private func installDefaultData() {
+    private func loadDatabases() {
         do {
-            try DefaultExerciseDatabase.installIfNeeded(in: modelContext)
-            try DefaultWorkoutDatabase.installIfNeeded(in: modelContext)
+            let exerciseDatabaseRebuilt = try ExerciseDatabase.installIfNeeded(
+                in: modelContext
+            )
+            try WorkoutDatabase.installIfNeeded(
+                in: modelContext,
+                forceRebuild: exerciseDatabaseRebuilt
+            )
             initializationError = nil
         } catch {
             modelContext.rollback()

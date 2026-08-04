@@ -30,10 +30,16 @@ struct ManageWorkoutsView: View {
             } else {
                 List {
                     ForEach(orderedTimers) { timer in
-                        NavigationLink {
-                            EditWorkoutView(timer: timer)
-                        } label: {
-                            SavedWorkoutRow(timer: timer)
+                        Group {
+                            if timer.isCategoryWorkout {
+                                SavedWorkoutRow(timer: timer)
+                            } else {
+                                NavigationLink {
+                                    EditWorkoutView(timer: timer)
+                                } label: {
+                                    SavedWorkoutRow(timer: timer)
+                                }
+                            }
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             Button {
@@ -46,6 +52,7 @@ struct ManageWorkoutsView: View {
                             }
                             .tint(timer.isPinned ? .gray : AppTheme.energy)
                         }
+                        .deleteDisabled(timer.isCategoryWorkout)
                     }
                     .onDelete(perform: deleteTimers)
                     .onMove(perform: moveTimers)
@@ -84,7 +91,9 @@ struct ManageWorkoutsView: View {
 
     private func deleteTimers(at offsets: IndexSet) {
         for index in offsets {
-            modelContext.delete(orderedTimers[index])
+            let timer = orderedTimers[index]
+            guard !timer.isCategoryWorkout else { continue }
+            modelContext.delete(timer)
         }
 
         do {

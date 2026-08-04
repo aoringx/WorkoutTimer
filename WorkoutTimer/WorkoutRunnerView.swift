@@ -96,11 +96,10 @@ struct WorkoutRunnerView: View {
     }
 
     private var currentExerciseTint: Color {
-        guard let currentExercise,
-              let category = ExerciseCategory(rawValue: currentExercise.category) else {
+        guard let currentExercise else {
             return AppTheme.brand
         }
-        return category.themeTint
+        return currentExercise.primaryCategory.themeTint
     }
 
     private var phaseTint: Color {
@@ -310,8 +309,7 @@ struct WorkoutRunnerView: View {
     private func exerciseScreen(_ exercise: TimerExerciseItem) -> some View {
         let accent = phase == .rest
             ? AppTheme.rest
-            : (ExerciseCategory(rawValue: exercise.category)?.themeTint
-                ?? AppTheme.electricBlue)
+            : exercise.primaryCategory.themeTint
 
         return ScrollView {
             VStack(spacing: 12) {
@@ -843,8 +841,7 @@ struct WorkoutRunnerView: View {
     }
 
     private func tint(for exercise: TimerExerciseItem) -> Color {
-        ExerciseCategory(rawValue: exercise.category)?.themeTint
-            ?? AppTheme.brand
+        exercise.primaryCategory.themeTint
     }
 
     private func restDestinationDescription(for exercise: TimerExerciseItem) -> String {

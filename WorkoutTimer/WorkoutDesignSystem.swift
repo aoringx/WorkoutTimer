@@ -43,6 +43,8 @@ extension ExerciseCategory {
             AppTheme.success
         case .handstand:
             .teal
+        case .lSit:
+            .indigo
         case .core:
             AppTheme.brand
         }
@@ -196,23 +198,38 @@ struct AppNavigationCard: View {
 }
 
 struct ExerciseCategoryBadge: View {
-    let categoryName: String
-
-    private var category: ExerciseCategory? {
-        ExerciseCategory(rawValue: categoryName)
-    }
-
-    private var tint: Color {
-        category?.themeTint ?? AppTheme.brand
-    }
+    let category: ExerciseCategory
 
     var body: some View {
-        Text(categoryName)
+        Text(category.rawValue)
             .font(.caption2.weight(.bold))
-            .foregroundStyle(tint)
+            .foregroundStyle(category.themeTint)
             .padding(.horizontal, 9)
             .padding(.vertical, 5)
-            .background(tint.opacity(0.12), in: Capsule())
+            .background(category.themeTint.opacity(0.12), in: Capsule())
+    }
+}
+
+struct ExerciseCategoryBadges: View {
+    let categories: [ExerciseCategory]
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 6) {
+                badges
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                badges
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var badges: some View {
+        ForEach(categories) { category in
+            ExerciseCategoryBadge(category: category)
+        }
     }
 }
 
@@ -234,7 +251,7 @@ struct MetricChip: View {
 
 struct ExerciseSummaryContent: View {
     let name: String
-    let category: String
+    let categories: [ExerciseCategory]
     let sets: Int
     let reps: Int
     let restSeconds: Int
@@ -246,7 +263,7 @@ struct ExerciseSummaryContent: View {
                 .foregroundStyle(.primary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            ExerciseCategoryBadge(categoryName: category)
+            ExerciseCategoryBadges(categories: categories)
 
             ViewThatFits(in: .horizontal) {
                 HStack(spacing: 6) {

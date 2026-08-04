@@ -208,7 +208,7 @@ struct EditWorkoutView: View {
 private struct TimerExerciseDraft: Identifiable {
     let id: UUID
     let exerciseName: String
-    let category: String
+    let categories: [ExerciseCategory]
     let numberOfSets: Int
     let numberOfReps: Int
     let restSeconds: Int
@@ -216,7 +216,7 @@ private struct TimerExerciseDraft: Identifiable {
     init(_ exercise: TimerExerciseItem) {
         id = exercise.id
         exerciseName = exercise.exerciseName
-        category = exercise.category
+        categories = exercise.exerciseCategories
         numberOfSets = exercise.numberOfSets
         numberOfReps = exercise.numberOfReps
         restSeconds = exercise.restSeconds
@@ -225,7 +225,7 @@ private struct TimerExerciseDraft: Identifiable {
     init(_ exercise: ExerciseItem) {
         id = UUID()
         exerciseName = exercise.name
-        category = exercise.exerciseCategory.rawValue
+        categories = exercise.exerciseCategories
         numberOfSets = exercise.numberOfSets
         numberOfReps = exercise.numberOfReps
         restSeconds = exercise.restSeconds
@@ -235,7 +235,7 @@ private struct TimerExerciseDraft: Identifiable {
         TimerExerciseItem(
             position: position,
             exerciseName: exerciseName,
-            category: category,
+            categories: categories,
             numberOfSets: numberOfSets,
             numberOfReps: numberOfReps,
             restSeconds: restSeconds
@@ -249,7 +249,7 @@ private struct TimerExerciseDraftRow: View {
     var body: some View {
         ExerciseSummaryContent(
             name: exercise.exerciseName,
-            category: exercise.category,
+            categories: exercise.categories,
             sets: exercise.numberOfSets,
             reps: exercise.numberOfReps,
             restSeconds: exercise.restSeconds

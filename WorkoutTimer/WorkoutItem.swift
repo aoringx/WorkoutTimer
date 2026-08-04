@@ -12,6 +12,7 @@ final class WorkoutTimerItem: Identifiable {
     var name: String
     var isPinned: Bool = false
     var manualSortOrder: Int = 0
+    var categoryName: String?
     @Relationship(deleteRule: .cascade, inverse: \TimerExerciseItem.timer)
     var exercises: [TimerExerciseItem] = []
     var updatedAt: Date
@@ -21,6 +22,7 @@ final class WorkoutTimerItem: Identifiable {
         name: String,
         isPinned: Bool = false,
         manualSortOrder: Int = 0,
+        categoryName: String? = nil,
         exercises: [TimerExerciseItem] = [],
         updatedAt: Date = Date()
     ) {
@@ -28,6 +30,7 @@ final class WorkoutTimerItem: Identifiable {
         self.name = name
         self.isPinned = isPinned
         self.manualSortOrder = manualSortOrder
+        self.categoryName = categoryName
         self.exercises = exercises
         self.updatedAt = updatedAt
     }
@@ -38,5 +41,13 @@ final class WorkoutTimerItem: Identifiable {
 
     var orderedExercises: [TimerExerciseItem] {
         exercises.sorted { $0.position < $1.position }
+    }
+
+    var categoryWorkoutCategory: ExerciseCategory? {
+        categoryName.flatMap(ExerciseCategory.init(rawValue:))
+    }
+
+    var isCategoryWorkout: Bool {
+        categoryWorkoutCategory != nil
     }
 }

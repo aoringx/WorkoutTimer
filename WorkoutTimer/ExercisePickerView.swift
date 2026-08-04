@@ -32,7 +32,9 @@ struct ExercisePickerView: View {
 
         return exercises.filter { exercise in
             exercise.name.localizedStandardContains(searchText)
-                || exercise.exerciseCategory.rawValue.localizedStandardContains(searchText)
+                || exercise.exerciseCategories.contains { category in
+                    category.rawValue.localizedStandardContains(searchText)
+                }
         }
     }
 
@@ -74,7 +76,7 @@ struct ExercisePickerView: View {
                             HStack(spacing: 10) {
                                 ExerciseSummaryContent(
                                     name: exercise.name,
-                                    category: exercise.category,
+                                    categories: exercise.exerciseCategories,
                                     sets: exercise.numberOfSets,
                                     reps: exercise.numberOfReps,
                                     restSeconds: exercise.restSeconds

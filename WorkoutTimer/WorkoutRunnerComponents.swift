@@ -290,15 +290,14 @@ struct WorkoutSetCard: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var categoryTint: Color {
-        ExerciseCategory(rawValue: exercise.category)?.themeTint
-            ?? AppTheme.electricBlue
+        exercise.primaryCategory.themeTint
     }
 
     var body: some View {
         VStack(spacing: 12) {
             VStack(spacing: 6) {
                 HStack {
-                    ExerciseCategoryBadge(categoryName: exercise.category)
+                    ExerciseCategoryBadges(categories: exercise.exerciseCategories)
 
                     Spacer()
 
