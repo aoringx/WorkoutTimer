@@ -1,5 +1,5 @@
 //
-//  WorkoutExerciseItem.swift
+//  TimerExerciseItem.swift
 //  WorkoutTimer
 //
 

@@ -25,7 +25,9 @@ struct SavedWorkoutRow: View {
                     Text(timer.name)
                         .font(.headline)
                         .foregroundStyle(.primary)
+                        .lineLimit(nil)
                         .fixedSize(horizontal: false, vertical: true)
+                        .layoutPriority(1)
 
                     Spacer(minLength: 4)
 
@@ -37,15 +39,10 @@ struct SavedWorkoutRow: View {
                     }
                 }
 
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: 6) {
-                        metricChips
-                    }
-
-                    VStack(alignment: .leading, spacing: 6) {
-                        metricChips
-                    }
+                WrappingHStack {
+                    metricChips
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 Label {
                     Text(
@@ -59,6 +56,7 @@ struct SavedWorkoutRow: View {
                 .foregroundStyle(.tertiary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
         }
         .padding(.vertical, 5)
         .accessibilityElement(children: .combine)

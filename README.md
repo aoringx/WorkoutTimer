@@ -44,15 +44,19 @@ Rebuilding the project does not clear persisted SwiftData. Delete the app or era
 
 ## Project Structure
 
-| Area | Key files |
+The app uses a feature-first layout with shared core layers:
+
+| Directory | Responsibility |
 | --- | --- |
-| App setup and navigation | `WorkoutApp.swift`, `ContentView.swift` |
-| Exercise library | `ExerciseItem.swift`, `ExercisesOptionsView.swift`, `ExerciseEditorView.swift` |
-| Workout creation and management | `CreateWorkoutView.swift`, `EditWorkoutView.swift`, `ManageWorkoutsView.swift` |
-| Workout experience | `WorkoutRunnerView.swift`, `WorkoutRunnerComponents.swift`, `WorkoutSoundPlayer.swift` |
-| Persistence models | `WorkoutItem.swift`, `WorkoutExerciseItem.swift` |
-| Bundled and derived content | `ExerciseDatabase.swift`, `WorkoutDatabase.swift` |
-| Preferences and sorting | `SettingsView.swift`, `AppSettings.swift`, `SortOptions.swift` |
+| `WorkoutTimer/App/` | App entry point, root navigation, and startup |
+| `WorkoutTimer/Core/` | App-wide configuration, models, persistence, extensions, and utilities |
+| `WorkoutTimer/Features/` | Exercise library, workout library, workout runner, and settings flows |
+| `WorkoutTimer/Shared/` | Reusable design-system components and styles |
+| `WorkoutTimer/Resources/` | Asset catalogs and other bundled resources |
+| `Documentation/` | Architecture and contributor-facing project notes |
+
+See [Architecture](Documentation/Architecture.md) for the full directory map,
+dependency direction, and file-placement conventions.
 
 ## Data Model
 

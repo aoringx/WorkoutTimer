@@ -124,29 +124,17 @@ struct CreateWorkoutView: View {
                 .foregroundStyle(AppTheme.energy)
             }
 
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 8) {
-                    MetricChip(
-                        text: "\(selectedExercises.count) exercises",
-                        systemImage: "figure.strengthtraining.traditional"
-                    )
-                    MetricChip(
-                        text: "\(totalSetCount) sets",
-                        systemImage: "square.stack.3d.up"
-                    )
-                }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    MetricChip(
-                        text: "\(selectedExercises.count) exercises",
-                        systemImage: "figure.strengthtraining.traditional"
-                    )
-                    MetricChip(
-                        text: "\(totalSetCount) sets",
-                        systemImage: "square.stack.3d.up"
-                    )
-                }
+            WrappingHStack(horizontalSpacing: 8, verticalSpacing: 8) {
+                MetricChip(
+                    text: "\(selectedExercises.count) exercises",
+                    systemImage: "figure.strengthtraining.traditional"
+                )
+                MetricChip(
+                    text: "\(totalSetCount) sets",
+                    systemImage: "square.stack.3d.up"
+                )
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

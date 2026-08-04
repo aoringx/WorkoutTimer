@@ -30,16 +30,10 @@ struct ManageWorkoutsView: View {
             } else {
                 List {
                     ForEach(orderedTimers) { timer in
-                        Group {
-                            if timer.isCategoryWorkout {
-                                SavedWorkoutRow(timer: timer)
-                            } else {
-                                NavigationLink {
-                                    EditWorkoutView(timer: timer)
-                                } label: {
-                                    SavedWorkoutRow(timer: timer)
-                                }
-                            }
+                        NavigationLink {
+                            EditWorkoutView(timer: timer)
+                        } label: {
+                            SavedWorkoutRow(timer: timer)
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             Button {
