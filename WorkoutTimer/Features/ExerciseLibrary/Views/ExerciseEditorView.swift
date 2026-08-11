@@ -131,7 +131,7 @@ struct ExerciseEditorView: View {
                         }
                     }
 
-                    Stepper(value: $numberOfReps, in: 1...100) {
+                    Stepper(value: $numberOfReps, in: 1...600) {
                         HStack {
                             SettingsRowLabel(
                                 title: "Reps / Seconds",

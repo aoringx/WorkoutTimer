@@ -118,10 +118,6 @@ private struct WorkoutSetProgressSlider: View {
             let currentSetFraction = totalSetCount > 1
                 ? CGFloat(currentSetIndex) / CGFloat(totalSetCount - 1)
                 : 0.5
-            let completedFraction = min(
-                max(CGFloat(completedSetCount) / CGFloat(max(totalSetCount, 1)), 0),
-                1
-            )
 
             ZStack(alignment: .leading) {
                 Capsule()
@@ -138,7 +134,7 @@ private struct WorkoutSetProgressSlider: View {
                         )
                     )
                     .frame(
-                        width: selectableWidth * completedFraction,
+                        width: selectableWidth * currentSetFraction,
                         height: 7
                     )
                     .offset(x: thumbRadius)

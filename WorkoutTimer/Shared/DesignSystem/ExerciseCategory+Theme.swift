@@ -22,6 +22,12 @@ extension ExerciseCategory {
             .indigo
         case .core:
             AppTheme.brand
+        case .freeze:
+            .cyan
+        case .power:
+            AppTheme.rest
+        case .cardio:
+            .pink
         }
     }
 }

@@ -22,34 +22,37 @@ enum WorkoutDatabase {
                 "Knee Pseudo Planche Lean",
                 "Bent-arm Planche",
                 "Crow Pose",
-                "Pseudo Planche Push-Ups"
+                "Pseudo Planche Push-ups"
             ]
         ),
         WorkoutDefinition(
             category: .push,
             exerciseNames: [
-                "Handstand Push-Ups",
-                "Pike Push-Ups",
+                "Handstand Push-ups",
+                "Pike Push-ups",
+                "Pseudo Planche Push-ups",
                 "Dips",
-                "Russian Push-Ups",
-                "Diamond Push-Ups",
-                "Bar One-Arm Push-Ups",
-                "Archer Push-Ups",
+                "Russian Push-ups",
+                "Diamond Push-ups",
+                "Bar One-arm Push-ups",
+                "Archer Push-ups",
+                "Explosive Pushups",
+                "Weighted Push-ups",
+                "Finger Push-ups",
                 "Tricep Extensions",
-                "Weighted Push-Ups",
-                "Push-Ups"
+                "Push-ups"
             ]
         ),
         WorkoutDefinition(
             category: .pull,
             exerciseNames: [
-                "Assisted Muscle-Ups",
-                "Pull-Ups",
-                "Assisted Pull-Ups",
-                "Pull-Up Negatives",
-                "Chin-Ups",
-                "Assisted Chin-Ups",
-                "Chin-Up Negatives",
+                "Assisted Muscle-ups",
+                "Pull-ups",
+                "Assisted Pull-ups",
+                "Pull-up Negatives",
+                "Chin-ups",
+                "Assisted Chin-ups",
+                "Chin-up Negatives",
                 "Inverted Rows",
                 "Tuck Front Lever",
                 "Assisted Front Lever",
@@ -67,31 +70,33 @@ enum WorkoutDatabase {
                 "Squats",
                 "Lunges",
                 "Reverse Lunges",
-                "Calf Raises",
+                "Calf raises",
                 "Glute Bridges"
             ]
         ),
         WorkoutDefinition(
             category: .handstand,
             exerciseNames: [
-                "Handstand Push-Ups",
-                "Freestanding Handstand Holds",
+                "Handstand Push-ups",
+                "Handstands",
                 "Wall Handstand Shoulder Taps",
+                "Wall Walks",
                 "Wall Handstand Holds",
                 "Crow Pose",
-                "Pike Push-Ups"
+                "Pike Push-ups"
             ]
         ),
         WorkoutDefinition(
             category: .lSit,
             exerciseNames: [
-                "L-Sit Extensions",
-                "Tuck L-Sit",
-                "L-Sit Leg Raise Holds",
-                "L-Sit Leg Raises",
+                "L-sits",
+                "L-sit Extensions",
+                "Tuck L-sit",
+                "L-sit Leg Raise Holds",
+                "L-sit Leg Raises",
                 "Hanging Leg Raise Holds",
                 "Hanging Leg Raises",
-                "L-Sit Support Holds"
+                "L-sit Support Holds"
             ]
         ),
         WorkoutDefinition(
@@ -101,14 +106,66 @@ enum WorkoutDatabase {
                 "Leg Raises",
                 "Hollow Body Holds",
                 "Planks",
+                "Planks Knee to Elbow",
                 "Side Planks",
+                "Side Splits",
+                "Side Planks Roll Through",
+                "Side Planks Reach Through",
                 "Russian Twists"
+            ]
+        ),
+        WorkoutDefinition(
+            category: .freeze,
+            exerciseNames: [
+                "Handstand",
+                "Baby",
+                "Turtle",
+                "Elbow",
+                "Pilot",
+                "Headstand",
+                "Head Bridge",
+                "Bridge",
+                "Side",
+                "Air Baby",
+                "Nike",
+                "Handstand Hop",
+                "Turtle - Headstand",
+                "Turtle - Handstand",
+                "Shoulder - Headstand",
+                "Headstand - Handstand",
+                "Baby - Elbow",
+                "Elbow - Elbow",
+                "Elbow - Handstand",
+                "Baby Stack"
+            ]
+        ),
+        WorkoutDefinition(
+            category: .power,
+            exerciseNames: [
+                "Windmill",
+                "Headspin",
+                "Headmill",
+                "2000",
+                "1990",
+                "Swipe",
+                "Handglide",
+                "Cricket"
+            ]
+        ),
+        WorkoutDefinition(
+            category: .cardio,
+            exerciseNames: [
+                "Bike",
+                "L-sits",
+                "Rows",
+                "Burpee Box Jumps",
+                "Wall Walks"
             ]
         )
     ]
 
     // Increment this when a category workout definition or order changes.
-    private static let version = 1
+    private static let version = 3
     private static let installedVersionKey = "database.workoutContentVersion"
 
     static func installIfNeeded(

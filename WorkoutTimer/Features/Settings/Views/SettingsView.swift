@@ -106,7 +106,7 @@ struct SettingsView: View {
                     }
                 }
 
-                Stepper(value: $defaultReps, in: 1...100) {
+                Stepper(value: $defaultReps, in: 1...600) {
                     HStack {
                         SettingsRowLabel(
                             title: "Reps / Seconds",
