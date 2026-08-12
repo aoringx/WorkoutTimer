@@ -8,123 +8,144 @@ import SwiftData
 
 @MainActor
 enum ExerciseDatabase {
+    private struct ExerciseDefinition {
+        let name: String
+        let category: ExerciseCategory
+        let numberOfReps: Int
+        let numberOfSets: Int
+        let restSeconds: Int
+    }
+
+    private static let definitions = [
+        // Planche
+        ExerciseDefinition(name: "Tuck Planche", category: .planche, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Pseudo Planche Lean", category: .planche, numberOfReps: 15, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Knee Pseudo Planche Lean", category: .planche, numberOfReps: 15, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Bent-arm Planche", category: .planche, numberOfReps: 12, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Pseudo Planche Push-ups", category: .planche, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Crow Pose", category: .planche, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+
+        // Push
+        ExerciseDefinition(name: "Handstand Push-ups", category: .push, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Pike Push-ups", category: .push, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Dips", category: .push, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Russian Push-ups", category: .push, numberOfReps: 6, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Diamond Push-ups", category: .push, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Bar One-arm Push-ups", category: .push, numberOfReps: 6, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Archer Push-ups", category: .push, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Tricep Extensions", category: .push, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Explosive Pushups", category: .push, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Weighted Push-ups", category: .push, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Finger Push-ups", category: .push, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Push-ups", category: .push, numberOfReps: 16, numberOfSets: 3, restSeconds: 60),
+
+        // Pull
+        ExerciseDefinition(name: "Assisted Muscle-ups", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Pull-ups", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Pull-up Negatives", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Assisted Pull-ups", category: .pull, numberOfReps: 5, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Inverted Rows", category: .pull, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Tuck Front Lever", category: .pull, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Assisted Front Lever", category: .pull, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Tuck Back Lever", category: .pull, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Active Hangs", category: .pull, numberOfReps: 15, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "Dead Hangs", category: .pull, numberOfReps: 15, numberOfSets: 2, restSeconds: 60),
+
+        // Legs
+        ExerciseDefinition(name: "Dragon Squats", category: .legs, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Bosu Pistol Squats", category: .legs, numberOfReps: 4, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Bulgarian Split Squats", category: .legs, numberOfReps: 15, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Bosu Squats", category: .legs, numberOfReps: 15, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Reverse Lunges", category: .legs, numberOfReps: 20, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Calf raises", category: .legs, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Glute Bridges", category: .legs, numberOfReps: 60, numberOfSets: 3, restSeconds: 90),
+
+        // Handstand
+        ExerciseDefinition(name: "Handstand Push-ups", category: .handstand, numberOfReps: 3, numberOfSets: 5, restSeconds: 60),
+        ExerciseDefinition(name: "Handstand", category: .handstand, numberOfReps: 15, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Wall Handstand Shoulder Taps", category: .handstand, numberOfReps: 6, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Wall Walks", category: .handstand, numberOfReps: 6, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Crow Pose", category: .handstand, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Pike Push-ups", category: .handstand, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+
+        // L-sit
+        ExerciseDefinition(name: "L-sits", category: .lSit, numberOfReps: 6, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "L-sit Extensions", category: .lSit, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Tuck L-sit", category: .lSit, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "L-sit Leg Raise Holds", category: .lSit, numberOfReps: 16, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "L-sit Leg Raises", category: .lSit, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Hanging Leg Raise Holds", category: .lSit, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Hanging Leg Raises", category: .lSit, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "L-sit Support Holds", category: .lSit, numberOfReps: 20, numberOfSets: 3, restSeconds: 60),
+
+        // Core
+        ExerciseDefinition(name: "Dragon Flag Negatives", category: .core, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Hanging Leg Raise Holds", category: .core, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Hanging Leg Raises", category: .core, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Leg Raises", category: .core, numberOfReps: 18, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Hollow Body Holds", category: .core, numberOfReps: 30, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Planks", category: .core, numberOfReps: 75, numberOfSets: 2, restSeconds: 90),
+        ExerciseDefinition(name: "Planks Knee to Elbow", category: .core, numberOfReps: 75, numberOfSets: 2, restSeconds: 90),
+        ExerciseDefinition(name: "Side Planks", category: .core, numberOfReps: 45, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Side Splits", category: .core, numberOfReps: 30, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Side Planks Roll Through", category: .core, numberOfReps: 90, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Side Planks Reach Through", category: .core, numberOfReps: 45, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Russian Twists", category: .core, numberOfReps: 20, numberOfSets: 3, restSeconds: 90),
+
+        // Freeze
+        ExerciseDefinition(name: "Handstand", category: .freeze, numberOfReps: 10, numberOfSets: 1, restSeconds: 60),
+        ExerciseDefinition(name: "Baby", category: .freeze, numberOfReps: 20, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Turtle", category: .freeze, numberOfReps: 20, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Elbow", category: .freeze, numberOfReps: 20, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Pilot", category: .freeze, numberOfReps: 20, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Headstand", category: .freeze, numberOfReps: 30, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Head Bridge", category: .freeze, numberOfReps: 20, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Bridge", category: .freeze, numberOfReps: 20, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Side", category: .freeze, numberOfReps: 20, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Air Baby", category: .freeze, numberOfReps: 8, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Nike", category: .freeze, numberOfReps: 8, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Handstand Hop", category: .freeze, numberOfReps: 6, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Turtle - Headstand", category: .freeze, numberOfReps: 3, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Headstand - Handstand", category: .freeze, numberOfReps: 3, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Turtle - Handstand", category: .freeze, numberOfReps: 1, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Shoulder - Headstand", category: .freeze, numberOfReps: 3, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Baby - Elbow", category: .freeze, numberOfReps: 3, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Elbow - Elbow", category: .freeze, numberOfReps: 3, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Elbow - Handstand", category: .freeze, numberOfReps: 3, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Baby Stack", category: .freeze, numberOfReps: 12, numberOfSets: 3, restSeconds: 90),
+
+        // Power
+        ExerciseDefinition(name: "Windmill", category: .power, numberOfReps: 5, numberOfSets: 3, restSeconds: 90),
+        ExerciseDefinition(name: "Headspin", category: .power, numberOfReps: 8, numberOfSets: 5, restSeconds: 90),
+        ExerciseDefinition(name: "Headmill", category: .power, numberOfReps: 3, numberOfSets: 5, restSeconds: 90),
+        ExerciseDefinition(name: "Swipe", category: .power, numberOfReps: 6, numberOfSets: 5, restSeconds: 90),
+        ExerciseDefinition(name: "Handglide", category: .power, numberOfReps: 5, numberOfSets: 5, restSeconds: 90),
+        ExerciseDefinition(name: "2000", category: .power, numberOfReps: 5, numberOfSets: 5, restSeconds: 90),
+        ExerciseDefinition(name: "1990", category: .power, numberOfReps: 5, numberOfSets: 5, restSeconds: 90),
+        ExerciseDefinition(name: "Cricket", category: .power, numberOfReps: 8, numberOfSets: 5, restSeconds: 90),
+
+        // Cardio
+        ExerciseDefinition(name: "L-sits", category: .cardio, numberOfReps: 20, numberOfSets: 1, restSeconds: 30),
+        ExerciseDefinition(name: "Rows", category: .cardio, numberOfReps: 180, numberOfSets: 1, restSeconds: 30),
+        ExerciseDefinition(name: "Wall Walks", category: .cardio, numberOfReps: 15, numberOfSets: 1, restSeconds: 30),
+        ExerciseDefinition(name: "Bike", category: .cardio, numberOfReps: 180, numberOfSets: 1, restSeconds: 30),
+        ExerciseDefinition(name: "Burpee Box Jumps", category: .cardio, numberOfReps: 15, numberOfSets: 1, restSeconds: 30),
+    ]
+
     static var exercises: [ExerciseItem] {
-        [
-            // Planche
-            ExerciseItem(name: "Tuck Planche", category: .planche, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Pseudo Planche Lean", category: .planche, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
-            ExerciseItem(name: "Knee Pseudo Planche Lean", category: .planche, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
-            ExerciseItem(name: "Bent-arm Planche", category: .planche, numberOfSets: 3, numberOfReps: 12, restSeconds: 90),
-            ExerciseItem(name: "Pseudo Planche Push-ups", categories: [.planche, .push], numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-
-            // Push
-            ExerciseItem(name: "Dips", category: .push, numberOfSets: 3, numberOfReps: 10, restSeconds: 90),
-            ExerciseItem(name: "Russian Push-ups", category: .push, numberOfSets: 3, numberOfReps: 6, restSeconds: 90),
-            ExerciseItem(name: "Diamond Push-ups", category: .push, numberOfSets: 3, numberOfReps: 10, restSeconds: 60),
-            ExerciseItem(name: "Bar One-arm Push-ups", category: .push, numberOfSets: 3, numberOfReps: 6, restSeconds: 60),
-            ExerciseItem(name: "Archer Push-ups", category: .push, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Tricep Extensions", category: .push, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Explosive Pushups", category: .push, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Weighted Push-ups", category: .push, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Finger Push-ups", category: .push, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Push-ups", category: .push, numberOfSets: 3, numberOfReps: 16, restSeconds: 60),
-
-            // Pull
-            ExerciseItem(name: "Assisted Muscle-ups", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
-            ExerciseItem(name: "Pull-ups", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
-            ExerciseItem(name: "Pull-up Negatives", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
-            ExerciseItem(name: "Assisted Pull-ups", category: .pull, numberOfSets: 3, numberOfReps: 5, restSeconds: 60),
-            ExerciseItem(name: "Inverted Rows", category: .pull, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Chin-ups", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
-            ExerciseItem(name: "Chin-up Negatives", category: .pull, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
-            ExerciseItem(name: "Assisted Chin-ups", category: .pull, numberOfSets: 3, numberOfReps: 5, restSeconds: 60),
-            ExerciseItem(name: "Tuck Front Lever", category: .pull, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Assisted Front Lever", category: .pull, numberOfSets: 3, numberOfReps: 10, restSeconds: 60),
-            ExerciseItem(name: "Tuck Back Lever", category: .pull, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Dead Hangs", category: .pull, numberOfSets: 3, numberOfReps: 15, restSeconds: 60),
-
-            // Legs
-            ExerciseItem(name: "Dragon Squats", category: .legs, numberOfSets: 3, numberOfReps: 1, restSeconds: 90),
-            ExerciseItem(name: "Pistol Squats", category: .legs, numberOfSets: 3, numberOfReps: 8, restSeconds: 90),
-            ExerciseItem(name: "Bulgarian Split Squats", category: .legs, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
-            ExerciseItem(name: "Bosu Squats", category: .legs, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
-            ExerciseItem(name: "Squats", category: .legs, numberOfSets: 3, numberOfReps: 24, restSeconds: 90),
-            ExerciseItem(name: "Lunges", category: .legs, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Reverse Lunges", category: .legs, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Calf raises", category: .legs, numberOfSets: 3, numberOfReps: 10, restSeconds: 90),
-            ExerciseItem(name: "Glute Bridges", category: .legs, numberOfSets: 3, numberOfReps: 30, restSeconds: 90),
-
-            // Handstand
-            ExerciseItem(name: "Handstand Push-ups", categories: [.handstand, .push], numberOfSets: 3, numberOfReps: 3, restSeconds: 30),
-            ExerciseItem(name: "Handstand", categories: [.freeze, .handstand], numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
-            ExerciseItem(name: "Wall Handstand Shoulder Taps", category: .handstand, numberOfSets: 3, numberOfReps: 6, restSeconds: 90),
-            ExerciseItem(name: "Wall Walks", categories: [.cardio, .handstand], numberOfSets: 3, numberOfReps: 5, restSeconds: 60),
-            ExerciseItem(name: "Wall Handstand Holds", category: .handstand, numberOfSets: 3, numberOfReps: 30, restSeconds: 90),
-            ExerciseItem(name: "Crow Pose", categories: [.handstand, .planche], numberOfSets: 3, numberOfReps: 10, restSeconds: 90),
-            ExerciseItem(name: "Pike Push-ups", categories: [.handstand, .push], numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-
-            // L-sit
-            ExerciseItem(name: "L-sits", categories: [.cardio, .lSit], numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "L-sit Extensions", category: .lSit, numberOfSets: 3, numberOfReps: 2, restSeconds: 60),
-            ExerciseItem(name: "Tuck L-sit", category: .lSit, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "L-sit Leg Raise Holds", category: .lSit, numberOfSets: 3, numberOfReps: 8, restSeconds: 90),
-            ExerciseItem(name: "L-sit Leg Raises", category: .lSit, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Hanging Leg Raise Holds", category: .lSit, numberOfSets: 3, numberOfReps: 8, restSeconds: 60),
-            ExerciseItem(name: "Hanging Leg Raises", category: .lSit, numberOfSets: 3, numberOfReps: 10, restSeconds: 60),
-            ExerciseItem(name: "L-sit Support Holds", category: .lSit, numberOfSets: 3, numberOfReps: 15, restSeconds: 90),
-
-            // Core
-            ExerciseItem(name: "Dragon Flag Negatives", category: .core, numberOfSets: 3, numberOfReps: 3, restSeconds: 60),
-            ExerciseItem(name: "Leg Raises", category: .core, numberOfSets: 3, numberOfReps: 18, restSeconds: 60),
-            ExerciseItem(name: "Hollow Body Holds", category: .core, numberOfSets: 3, numberOfReps: 30, restSeconds: 90),
-            ExerciseItem(name: "Planks", category: .core, numberOfSets: 2, numberOfReps: 75, restSeconds: 90),
-            ExerciseItem(name: "Planks Knee to Elbow", category: .core, numberOfSets: 2, numberOfReps: 75, restSeconds: 90),
-            ExerciseItem(name: "Side Planks", category: .core, numberOfSets: 1, numberOfReps: 45, restSeconds: 90),
-            ExerciseItem(name: "Side Splits", category: .core, numberOfSets: 1, numberOfReps: 30, restSeconds: 90),
-            ExerciseItem(name: "Side Planks Roll Through", category: .core, numberOfSets: 1, numberOfReps: 90, restSeconds: 90),
-            ExerciseItem(name: "Side Planks Reach Through", category: .core, numberOfSets: 1, numberOfReps: 45, restSeconds: 90),
-            ExerciseItem(name: "Russian Twists", category: .core, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
-
-            // Freeze
-            ExerciseItem(name: "Baby", category: .freeze, numberOfSets: 1, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Turtle", category: .freeze, numberOfSets: 1, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Elbow", category: .freeze, numberOfSets: 1, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Pilot", category: .freeze, numberOfSets: 1, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Headstand", category: .freeze, numberOfSets: 1, numberOfReps: 30, restSeconds: 90),
-            ExerciseItem(name: "Head Bridge", category: .freeze, numberOfSets: 1, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Bridge", category: .freeze, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Side", category: .freeze, numberOfSets: 3, numberOfReps: 20, restSeconds: 90),
-            ExerciseItem(name: "Air Baby", category: .freeze, numberOfSets: 3, numberOfReps: 8, restSeconds: 90),
-            ExerciseItem(name: "Nike", category: .freeze, numberOfSets: 3, numberOfReps: 8, restSeconds: 90),
-            ExerciseItem(name: "Handstand Hop", category: .freeze, numberOfSets: 3, numberOfReps: 6, restSeconds: 90),
-            ExerciseItem(name: "Turtle - Headstand", category: .freeze, numberOfSets: 3, numberOfReps: 3, restSeconds: 90),
-            ExerciseItem(name: "Turtle - Handstand", category: .freeze, numberOfSets: 3, numberOfReps: 1, restSeconds: 90),
-            ExerciseItem(name: "Shoulder - Headstand", category: .freeze, numberOfSets: 3, numberOfReps: 3, restSeconds: 90),
-            ExerciseItem(name: "Headstand - Handstand", category: .freeze, numberOfSets: 3, numberOfReps: 3, restSeconds: 90),
-            ExerciseItem(name: "Baby - Elbow", category: .freeze, numberOfSets: 3, numberOfReps: 3, restSeconds: 90),
-            ExerciseItem(name: "Elbow - Elbow", category: .freeze, numberOfSets: 3, numberOfReps: 3, restSeconds: 90),
-            ExerciseItem(name: "Elbow - Handstand", category: .freeze, numberOfSets: 3, numberOfReps: 3, restSeconds: 90),
-            ExerciseItem(name: "Baby Stack", category: .freeze, numberOfSets: 3, numberOfReps: 12, restSeconds: 90),
-
-            // Power
-            ExerciseItem(name: "Windmill", category: .power, numberOfSets: 3, numberOfReps: 5, restSeconds: 90),
-            ExerciseItem(name: "Headspin", category: .power, numberOfSets: 5, numberOfReps: 8, restSeconds: 90),
-            ExerciseItem(name: "Headmill", category: .power, numberOfSets: 5, numberOfReps: 3, restSeconds: 90),
-            ExerciseItem(name: "2000", category: .power, numberOfSets: 5, numberOfReps: 5, restSeconds: 90),
-            ExerciseItem(name: "1990", category: .power, numberOfSets: 5, numberOfReps: 5, restSeconds: 90),
-            ExerciseItem(name: "Swipe", category: .power, numberOfSets: 5, numberOfReps: 6, restSeconds: 90),
-            ExerciseItem(name: "Handglide", category: .power, numberOfSets: 5, numberOfReps: 5, restSeconds: 90),
-            ExerciseItem(name: "Cricket", category: .power, numberOfSets: 5, numberOfReps: 8, restSeconds: 90),
-
-            // Cardio
-            ExerciseItem(name: "Rows", category: .cardio, numberOfSets: 1, numberOfReps: 300, restSeconds: 30),
-            ExerciseItem(name: "Bike", category: .cardio, numberOfSets: 1, numberOfReps: 300, restSeconds: 30),
-            ExerciseItem(name: "Burpee Box Jumps", category: .cardio, numberOfSets: 1, numberOfReps: 10, restSeconds: 30)
-        ]
+        definitions.map { definition in
+            ExerciseItem(
+                name: definition.name,
+                category: definition.category,
+                numberOfSets: definition.numberOfSets,
+                numberOfReps: definition.numberOfReps,
+                restSeconds: definition.restSeconds
+            )
+        }
     }
 
     // Increment this when the bundled exercise collection changes.
-    private static let version = 3
+    private static let version = 4
     private static let installedVersionKey = "database.exerciseContentVersion"
 
     @discardableResult

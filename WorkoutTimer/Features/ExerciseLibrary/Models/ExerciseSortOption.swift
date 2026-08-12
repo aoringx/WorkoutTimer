@@ -16,7 +16,7 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
         switch self {
         case .recentlyUpdated: "Recently Updated"
         case .name: "Name (A–Z)"
-        case .category: "Categories"
+        case .category: "Type"
         }
     }
 
@@ -35,10 +35,10 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
                 if first.updatedAt != second.updatedAt {
                     first.updatedAt > second.updatedAt
                 } else {
-                    nameComesFirst(first.name, second.name)
+                    exerciseComesFirstByName(first, second)
                 }
             case .name:
-                nameComesFirst(first.name, second.name)
+                exerciseComesFirstByName(first, second)
             case .category:
                 if categorySortKey(for: first) != categorySortKey(for: second) {
                     nameComesFirst(
@@ -46,7 +46,7 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
                         categorySortKey(for: second)
                     )
                 } else {
-                    nameComesFirst(first.name, second.name)
+                    exerciseComesFirstByName(first, second)
                 }
             }
         }
@@ -54,7 +54,35 @@ enum ExerciseSortOption: String, CaseIterable, Identifiable {
 }
 
 private func categorySortKey(for exercise: ExerciseItem) -> String {
-    exercise.exerciseCategories
-        .map(\.rawValue)
-        .joined(separator: ", ")
+    exercise.exerciseCategory.rawValue
+}
+
+private func exerciseComesFirstByName(
+    _ first: ExerciseItem,
+    _ second: ExerciseItem
+) -> Bool {
+    let nameComparison = first.name.localizedStandardCompare(second.name)
+    if nameComparison != .orderedSame {
+        return nameComparison == .orderedAscending
+    }
+
+    let firstCategory = first.exerciseCategory.rawValue
+    let secondCategory = second.exerciseCategory.rawValue
+    if firstCategory != secondCategory {
+        return nameComesFirst(firstCategory, secondCategory)
+    }
+
+    if first.numberOfSets != second.numberOfSets {
+        return first.numberOfSets < second.numberOfSets
+    }
+
+    if first.numberOfReps != second.numberOfReps {
+        return first.numberOfReps < second.numberOfReps
+    }
+
+    if first.restSeconds != second.restSeconds {
+        return first.restSeconds < second.restSeconds
+    }
+
+    return first.id.uuidString < second.id.uuidString
 }

@@ -14,7 +14,7 @@ struct ExerciseEditorView: View {
     let exercise: ExerciseItem?
 
     @State private var name: String
-    @State private var selectedCategories: Set<ExerciseCategory>
+    @State private var selectedCategory: ExerciseCategory
     @State private var numberOfSets: Int
     @State private var numberOfReps: Int
     @State private var restSeconds: Int
@@ -27,17 +27,10 @@ struct ExerciseEditorView: View {
     private var isDuplicate: Bool {
         exercises.contains { candidate in
             candidate.id != exercise?.id
+                && candidate.exerciseCategory == selectedCategory
                 && candidate.name.normalizedForComparison
                     == trimmedName.normalizedForComparison
         }
-    }
-
-    private var categories: [ExerciseCategory] {
-        ExerciseCategory.allCases.filter(selectedCategories.contains)
-    }
-
-    private var primaryCategory: ExerciseCategory {
-        categories.first ?? .push
     }
 
     init(
@@ -48,8 +41,8 @@ struct ExerciseEditorView: View {
     ) {
         self.exercise = exercise
         _name = State(initialValue: exercise?.name ?? "")
-        _selectedCategories = State(
-            initialValue: Set(exercise?.exerciseCategories ?? [.push])
+        _selectedCategory = State(
+            initialValue: exercise?.exerciseCategory ?? .push
         )
         _numberOfSets = State(initialValue: exercise?.numberOfSets ?? defaultSets)
         _numberOfReps = State(initialValue: exercise?.numberOfReps ?? defaultReps)
@@ -64,7 +57,7 @@ struct ExerciseEditorView: View {
                         SettingsRowLabel(
                             title: "Name",
                             systemImage: "textformat",
-                            tint: primaryCategory.themeTint
+                            tint: selectedCategory.themeTint
                         )
 
                         TextField("Exercise name", text: $name)
@@ -74,7 +67,7 @@ struct ExerciseEditorView: View {
 
                     if isDuplicate {
                         Label(
-                            "An exercise with this name already exists.",
+                            "An exercise with this name and type already exists.",
                             systemImage: "exclamationmark.triangle.fill"
                         )
                         .font(.caption)
@@ -85,7 +78,7 @@ struct ExerciseEditorView: View {
                 Section {
                     ForEach(ExerciseCategory.allCases) { category in
                         Button {
-                            toggle(category)
+                            selectedCategory = category
                         } label: {
                             HStack {
                                 Text(category.rawValue)
@@ -94,12 +87,12 @@ struct ExerciseEditorView: View {
                                 Spacer()
 
                                 Image(
-                                    systemName: selectedCategories.contains(category)
+                                    systemName: selectedCategory == category
                                         ? "checkmark.circle.fill"
                                         : "circle"
                                 )
                                 .foregroundStyle(
-                                    selectedCategories.contains(category)
+                                    selectedCategory == category
                                         ? category.themeTint
                                         : Color.secondary
                                 )
@@ -109,9 +102,9 @@ struct ExerciseEditorView: View {
                         .buttonStyle(.plain)
                     }
                 } header: {
-                    Text("Categories")
+                    Text("Type")
                 } footer: {
-                    Text("Select one or more categories.")
+                    Text("Select one exercise type.")
                 }
 
                 Section("Workout Settings") {
@@ -167,10 +160,9 @@ struct ExerciseEditorView: View {
                         }
                     }
                 }
-
             }
-            .appListBackground(tint: primaryCategory.themeTint)
-            .tint(primaryCategory.themeTint)
+            .appListBackground(tint: selectedCategory.themeTint)
+            .tint(selectedCategory.themeTint)
             .navigationTitle(exercise == nil ? "New Exercise" : "Edit Exercise")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -205,7 +197,7 @@ struct ExerciseEditorView: View {
     private func save() {
         if let exercise {
             exercise.name = trimmedName
-            exercise.exerciseCategories = categories
+            exercise.exerciseCategory = selectedCategory
             exercise.numberOfSets = numberOfSets
             exercise.numberOfReps = numberOfReps
             exercise.restSeconds = restSeconds
@@ -214,7 +206,7 @@ struct ExerciseEditorView: View {
             modelContext.insert(
                 ExerciseItem(
                     name: trimmedName,
-                    categories: categories,
+                    category: selectedCategory,
                     numberOfSets: numberOfSets,
                     numberOfReps: numberOfReps,
                     restSeconds: restSeconds
@@ -229,15 +221,6 @@ struct ExerciseEditorView: View {
         } catch {
             modelContext.rollback()
             saveError = error
-        }
-    }
-
-    private func toggle(_ category: ExerciseCategory) {
-        if selectedCategories.contains(category) {
-            guard selectedCategories.count > 1 else { return }
-            selectedCategories.remove(category)
-        } else {
-            selectedCategories.insert(category)
         }
     }
 

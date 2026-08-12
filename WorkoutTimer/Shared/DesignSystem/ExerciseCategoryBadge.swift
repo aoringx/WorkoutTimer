@@ -1,5 +1,5 @@
 //
-//  ExerciseCategoryBadges.swift
+//  ExerciseCategoryBadge.swift
 //  WorkoutTimer
 //
 
@@ -17,23 +17,5 @@ struct ExerciseCategoryBadge: View {
             .padding(.horizontal, 9)
             .padding(.vertical, 5)
             .background(category.themeTint.opacity(0.12), in: Capsule())
-    }
-}
-
-struct ExerciseCategoryBadges: View {
-    let categories: [ExerciseCategory]
-
-    var body: some View {
-        WrappingHStack {
-            badges
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    @ViewBuilder
-    private var badges: some View {
-        ForEach(categories) { category in
-            ExerciseCategoryBadge(category: category)
-        }
     }
 }

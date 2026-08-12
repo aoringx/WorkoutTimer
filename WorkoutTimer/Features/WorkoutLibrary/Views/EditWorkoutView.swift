@@ -125,11 +125,7 @@ struct EditWorkoutView: View {
             }
         }
         .fullScreenCover(isPresented: $isExercisePickerPresented) {
-            ExercisePickerView(
-                excludedExerciseNames: Set(
-                    exercises.map { $0.exerciseName.normalizedForComparison }
-                )
-            ) { selectedExercises in
+            ExercisePickerView { selectedExercises in
                 exercises.append(
                     contentsOf: selectedExercises.map { exercise in
                         TimerExerciseDraft(exercise)
@@ -196,7 +192,7 @@ struct EditWorkoutView: View {
 private struct TimerExerciseDraft: Identifiable {
     let id: UUID
     let exerciseName: String
-    let categories: [ExerciseCategory]
+    let category: ExerciseCategory
     let numberOfSets: Int
     let numberOfReps: Int
     let restSeconds: Int
@@ -204,7 +200,7 @@ private struct TimerExerciseDraft: Identifiable {
     init(_ exercise: TimerExerciseItem) {
         id = exercise.id
         exerciseName = exercise.exerciseName
-        categories = exercise.exerciseCategories
+        category = exercise.exerciseCategory
         numberOfSets = exercise.numberOfSets
         numberOfReps = exercise.numberOfReps
         restSeconds = exercise.restSeconds
@@ -213,7 +209,7 @@ private struct TimerExerciseDraft: Identifiable {
     init(_ exercise: ExerciseItem) {
         id = UUID()
         exerciseName = exercise.name
-        categories = exercise.exerciseCategories
+        category = exercise.exerciseCategory
         numberOfSets = exercise.numberOfSets
         numberOfReps = exercise.numberOfReps
         restSeconds = exercise.restSeconds
@@ -223,7 +219,7 @@ private struct TimerExerciseDraft: Identifiable {
         TimerExerciseItem(
             position: position,
             exerciseName: exerciseName,
-            categories: categories,
+            category: category,
             numberOfSets: numberOfSets,
             numberOfReps: numberOfReps,
             restSeconds: restSeconds
@@ -237,7 +233,7 @@ private struct TimerExerciseDraftRow: View {
     var body: some View {
         ExerciseSummaryContent(
             name: exercise.exerciseName,
-            categories: exercise.categories,
+            category: exercise.category,
             sets: exercise.numberOfSets,
             reps: exercise.numberOfReps,
             restSeconds: exercise.restSeconds

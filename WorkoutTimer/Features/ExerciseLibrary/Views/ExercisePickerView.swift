@@ -8,10 +8,9 @@ import SwiftUI
 
 struct ExercisePickerView: View {
     @Environment(\.dismiss) private var dismiss
-    @Query(sort: \ExerciseItem.name) private var exercises: [ExerciseItem]
+    @Query private var exercises: [ExerciseItem]
 
     let excludedExerciseIDs: Set<UUID>
-    let excludedExerciseNames: Set<String>
     let onAdd: ([ExerciseItem]) -> Void
 
     @State private var selectedExerciseIDs: [UUID] = []
@@ -19,22 +18,21 @@ struct ExercisePickerView: View {
 
     init(
         excludedExerciseIDs: Set<UUID> = [],
-        excludedExerciseNames: Set<String> = [],
         onAdd: @escaping ([ExerciseItem]) -> Void
     ) {
         self.excludedExerciseIDs = excludedExerciseIDs
-        self.excludedExerciseNames = excludedExerciseNames
         self.onAdd = onAdd
     }
 
     private var visibleExercises: [ExerciseItem] {
-        guard !searchText.isEmpty else { return exercises }
+        let sortedExercises = ExerciseSortOption.name.sorted(exercises)
+        guard !searchText.isEmpty else { return sortedExercises }
 
-        return exercises.filter { exercise in
+        return sortedExercises.filter { exercise in
             exercise.name.localizedStandardContains(searchText)
-                || exercise.exerciseCategories.contains { category in
-                    category.rawValue.localizedStandardContains(searchText)
-                }
+                || exercise.exerciseCategory.rawValue.localizedStandardContains(
+                    searchText
+                )
         }
     }
 
@@ -64,9 +62,6 @@ struct ExercisePickerView: View {
                 } else {
                     List(visibleExercises) { exercise in
                         let isAlreadyAdded = excludedExerciseIDs.contains(exercise.id)
-                            || excludedExerciseNames.contains(
-                                exercise.name.normalizedForComparison
-                            )
                         let selectionNumber = selectedExerciseIDs.firstIndex(of: exercise.id)
                             .map { $0 + 1 }
 
@@ -76,7 +71,7 @@ struct ExercisePickerView: View {
                             HStack(spacing: 10) {
                                 ExerciseSummaryContent(
                                     name: exercise.name,
-                                    categories: exercise.exerciseCategories,
+                                    category: exercise.exerciseCategory,
                                     sets: exercise.numberOfSets,
                                     reps: exercise.numberOfReps,
                                     restSeconds: exercise.restSeconds

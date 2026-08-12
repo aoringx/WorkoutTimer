@@ -32,7 +32,7 @@ struct ExercisesOptionsView: View {
     private var visibleExercises: [ExerciseItem] {
         let filteredExercises = exercises.filter { exercise in
             let matchesCategory = selectedCategory.map {
-                exercise.exerciseCategories.contains($0)
+                exercise.exerciseCategory == $0
             } ?? true
             let matchesSearch = searchText.isEmpty
                 || exercise.name.localizedStandardContains(searchText)
@@ -223,7 +223,7 @@ private struct ExerciseRow: View {
         HStack(spacing: 10) {
             ExerciseSummaryContent(
                 name: exercise.name,
-                categories: exercise.exerciseCategories,
+                category: exercise.exerciseCategory,
                 sets: exercise.numberOfSets,
                 reps: exercise.numberOfReps,
                 restSeconds: exercise.restSeconds

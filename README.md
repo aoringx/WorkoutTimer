@@ -5,7 +5,7 @@ WorkoutTimer is a native iOS calisthenics app for building exercise libraries, c
 ## Features
 
 - Browse, search, filter, sort, create, edit, and delete exercises.
-- Assign exercises to one or more Planche, Push, Pull, Legs, Handstand, L-sit, Core, Freeze, Power, and Cardio categories.
+- Assign each exercise one Planche, Push, Pull, Legs, Handstand, L-sit, Core, Freeze, Power, or Cardio type, with duplicate names supported across different types.
 - Configure sets, reps or seconds, and rest time for each exercise.
 - Keep one automatic workout synchronized for every exercise category.
 - Build reusable workouts by selecting and reordering exercises.

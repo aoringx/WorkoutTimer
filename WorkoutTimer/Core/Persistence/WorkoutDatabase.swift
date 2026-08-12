@@ -21,25 +21,24 @@ enum WorkoutDatabase {
                 "Pseudo Planche Lean",
                 "Knee Pseudo Planche Lean",
                 "Bent-arm Planche",
-                "Crow Pose",
-                "Pseudo Planche Push-ups"
+                "Pseudo Planche Push-ups",
+                "Crow Pose"
             ]
         ),
         WorkoutDefinition(
             category: .push,
             exerciseNames: [
                 "Handstand Push-ups",
-                "Pike Push-ups",
-                "Pseudo Planche Push-ups",
                 "Dips",
                 "Russian Push-ups",
                 "Diamond Push-ups",
+                "Pike Push-ups",
                 "Bar One-arm Push-ups",
                 "Archer Push-ups",
+                "Tricep Extensions",
                 "Explosive Pushups",
                 "Weighted Push-ups",
                 "Finger Push-ups",
-                "Tricep Extensions",
                 "Push-ups"
             ]
         ),
@@ -48,15 +47,16 @@ enum WorkoutDatabase {
             exerciseNames: [
                 "Assisted Muscle-ups",
                 "Pull-ups",
-                "Assisted Pull-ups",
                 "Pull-up Negatives",
-                "Chin-ups",
-                "Assisted Chin-ups",
-                "Chin-up Negatives",
+                "Assisted Pull-ups",
                 "Inverted Rows",
+                "Chin-ups",
+                "Chin-up Negatives",
+                "Assisted Chin-ups",
                 "Tuck Front Lever",
                 "Assisted Front Lever",
                 "Tuck Back Lever",
+                "Active Hangs",
                 "Dead Hangs"
             ]
         ),
@@ -64,6 +64,7 @@ enum WorkoutDatabase {
             category: .legs,
             exerciseNames: [
                 "Dragon Squats",
+                "Bosu Pistol Squats",
                 "Pistol Squats",
                 "Bulgarian Split Squats",
                 "Bosu Squats",
@@ -78,7 +79,7 @@ enum WorkoutDatabase {
             category: .handstand,
             exerciseNames: [
                 "Handstand Push-ups",
-                "Handstands",
+                "Handstand",
                 "Wall Handstand Shoulder Taps",
                 "Wall Walks",
                 "Wall Handstand Holds",
@@ -130,9 +131,9 @@ enum WorkoutDatabase {
                 "Nike",
                 "Handstand Hop",
                 "Turtle - Headstand",
+                "Headstand - Handstand",
                 "Turtle - Handstand",
                 "Shoulder - Headstand",
-                "Headstand - Handstand",
                 "Baby - Elbow",
                 "Elbow - Elbow",
                 "Elbow - Handstand",
@@ -145,27 +146,27 @@ enum WorkoutDatabase {
                 "Windmill",
                 "Headspin",
                 "Headmill",
-                "2000",
-                "1990",
                 "Swipe",
                 "Handglide",
+                "2000",
+                "1990",
                 "Cricket"
             ]
         ),
         WorkoutDefinition(
             category: .cardio,
             exerciseNames: [
-                "Bike",
-                "L-sits",
                 "Rows",
+                "Bike",
                 "Burpee Box Jumps",
-                "Wall Walks"
+                "Wall Walks",
+                "L-sits"
             ]
         )
     ]
 
-    // Increment this when a category workout definition or order changes.
-    private static let version = 3
+    // Increment this when a category workout declaration or order changes.
+    private static let version = 4
     private static let installedVersionKey = "database.workoutContentVersion"
 
     static func installIfNeeded(
@@ -192,14 +193,27 @@ enum WorkoutDatabase {
         let savedWorkouts = try modelContext.fetch(
             FetchDescriptor<WorkoutTimerItem>()
         )
+        let savedTimerExercises = try modelContext.fetch(
+            FetchDescriptor<TimerExerciseItem>()
+        )
+
+        // Collapse any legacy multi-type workout snapshots to their stored
+        // primary type. New snapshots always start with this field cleared.
+        for exercise in savedTimerExercises {
+            exercise.additionalCategoryNames = nil
+        }
+        for exercise in exercises {
+            exercise.additionalCategoryNames = nil
+        }
 
         var nextManualSortOrder =
             (savedWorkouts.map(\.manualSortOrder).max() ?? -1) + 1
 
         for workoutDefinition in workouts {
             let category = workoutDefinition.category
-            let categoryExercises = exercises
-                .filter { $0.exerciseCategories.contains(category) }
+            let categoryExercises = exercises.filter {
+                $0.exerciseCategory == category
+            }
             let orderedExercises = ordered(
                 categoryExercises,
                 using: workoutDefinition

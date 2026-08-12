@@ -7,7 +7,7 @@ import SwiftUI
 
 struct ExerciseSummaryContent: View {
     let name: String
-    let categories: [ExerciseCategory]
+    let category: ExerciseCategory
     let sets: Int
     let reps: Int
     let restSeconds: Int
@@ -21,7 +21,7 @@ struct ExerciseSummaryContent: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .layoutPriority(1)
 
-            ExerciseCategoryBadges(categories: categories)
+            ExerciseCategoryBadge(category: category)
 
             WrappingHStack {
                 metricChips

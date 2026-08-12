@@ -26,6 +26,8 @@ final class ExerciseItem: Identifiable {
     @Attribute(.unique) var id: UUID
     var name: String
     var category: String
+    // Retained so existing SwiftData stores can migrate without a schema break.
+    // New and upgraded records always clear this legacy multi-type field.
     var additionalCategoryNames: [String]?
     var numberOfSets: Int = 3
     var numberOfReps: Int = 10
@@ -35,7 +37,7 @@ final class ExerciseItem: Identifiable {
     init(
         id: UUID = UUID(),
         name: String,
-        categories: [ExerciseCategory],
+        category: ExerciseCategory = .push,
         numberOfSets: Int = 3,
         numberOfReps: Int = 10,
         restSeconds: Int = 60,
@@ -43,68 +45,21 @@ final class ExerciseItem: Identifiable {
     ) {
         self.id = id
         self.name = name
-        let selectedCategories = Set(categories)
-        let orderedCategories = ExerciseCategory.allCases.filter {
-            selectedCategories.contains($0)
-        }
-        let categories = orderedCategories.isEmpty ? [.push] : orderedCategories
-        self.category = categories[0].rawValue
-        let additionalCategoryNames = categories.dropFirst().map(\.rawValue)
-        self.additionalCategoryNames = additionalCategoryNames.isEmpty
-            ? nil
-            : additionalCategoryNames
+        self.category = category.rawValue
+        self.additionalCategoryNames = nil
         self.numberOfSets = numberOfSets
         self.numberOfReps = numberOfReps
         self.restSeconds = restSeconds
         self.updatedAt = updatedAt
     }
 
-    convenience init(
-        id: UUID = UUID(),
-        name: String,
-        category: ExerciseCategory = .push,
-        numberOfSets: Int = 3,
-        numberOfReps: Int = 10,
-        restSeconds: Int = 60,
-        updatedAt: Date = Date()
-    ) {
-        self.init(
-            id: id,
-            name: name,
-            categories: [category],
-            numberOfSets: numberOfSets,
-            numberOfReps: numberOfReps,
-            restSeconds: restSeconds,
-            updatedAt: updatedAt
-        )
-    }
-
-    var exerciseCategories: [ExerciseCategory] {
+    var exerciseCategory: ExerciseCategory {
         get {
-            let primaryCategory = ExerciseCategory(rawValue: category)
-            let additionalNames = Set(additionalCategoryNames ?? [])
-            let additionalCategories = ExerciseCategory.allCases.filter {
-                $0 != primaryCategory && additionalNames.contains($0.rawValue)
-            }
-            let categories = (primaryCategory.map { [$0] } ?? [])
-                + additionalCategories
-            return categories.isEmpty ? [.push] : categories
+            ExerciseCategory(rawValue: category) ?? .push
         }
         set {
-            let selectedCategories = Set(newValue)
-            let categories = ExerciseCategory.allCases.filter {
-                selectedCategories.contains($0)
-            }
-            let resolvedCategories = categories.isEmpty ? [.push] : categories
-            category = resolvedCategories[0].rawValue
-            let additionalNames = resolvedCategories.dropFirst().map(\.rawValue)
-            additionalCategoryNames = additionalNames.isEmpty
-                ? nil
-                : additionalNames
+            category = newValue.rawValue
+            additionalCategoryNames = nil
         }
-    }
-
-    var primaryCategory: ExerciseCategory {
-        exerciseCategories.first ?? .push
     }
 }
