@@ -28,6 +28,8 @@ extension ExerciseCategory {
             AppTheme.rest
         case .cardio:
             .pink
+        case .popping:
+            .mint
         }
     }
 }

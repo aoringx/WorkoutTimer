@@ -29,15 +29,14 @@ enum WorkoutDatabase {
             category: .push,
             exerciseNames: [
                 "Handstand Push-ups",
+                "Pike Push-ups",
                 "Dips",
                 "Russian Push-ups",
                 "Diamond Push-ups",
-                "Pike Push-ups",
                 "Bar One-arm Push-ups",
                 "Archer Push-ups",
                 "Tricep Extensions",
                 "Explosive Pushups",
-                "Weighted Push-ups",
                 "Finger Push-ups",
                 "Push-ups"
             ]
@@ -50,9 +49,6 @@ enum WorkoutDatabase {
                 "Pull-up Negatives",
                 "Assisted Pull-ups",
                 "Inverted Rows",
-                "Chin-ups",
-                "Chin-up Negatives",
-                "Assisted Chin-ups",
                 "Tuck Front Lever",
                 "Assisted Front Lever",
                 "Tuck Back Lever",
@@ -65,11 +61,8 @@ enum WorkoutDatabase {
             exerciseNames: [
                 "Dragon Squats",
                 "Bosu Pistol Squats",
-                "Pistol Squats",
                 "Bulgarian Split Squats",
                 "Bosu Squats",
-                "Squats",
-                "Lunges",
                 "Reverse Lunges",
                 "Calf raises",
                 "Glute Bridges"
@@ -78,8 +71,10 @@ enum WorkoutDatabase {
         WorkoutDefinition(
             category: .handstand,
             exerciseNames: [
-                "Handstand Push-ups",
                 "Handstand",
+                "Handstand Push-ups",
+                "Handstand Upper Shift",
+                "Handstand Lower Shift",
                 "Wall Handstand Shoulder Taps",
                 "Wall Walks",
                 "Wall Handstand Holds",
@@ -104,6 +99,8 @@ enum WorkoutDatabase {
             category: .core,
             exerciseNames: [
                 "Dragon Flag Negatives",
+                "Hanging Leg Raise Holds",
+                "Hanging Leg Raises",
                 "Leg Raises",
                 "Hollow Body Holds",
                 "Planks",
@@ -156,17 +153,30 @@ enum WorkoutDatabase {
         WorkoutDefinition(
             category: .cardio,
             exerciseNames: [
+                "L-sits",
                 "Rows",
-                "Bike",
-                "Burpee Box Jumps",
                 "Wall Walks",
-                "L-sits"
+                "Bike",
+                "Burpee Box Jumps"
+            ]
+        ),
+        WorkoutDefinition(
+            category: .popping,
+            exerciseNames: [
+                "Arm, Chest, Leg Pop",
+                "Fresno",
+                "Body Pop",
+                "Head, Shoulder, Hip, Leg Roll",
+                "Arm, Body Wave",
+                "Head, Neck, Shoulder, Chest, Hip Isolation",
+                "Arm, Wrist, Finger, Leg Isolation",
+                "Dime Stop"
             ]
         )
     ]
 
     // Increment this when a category workout declaration or order changes.
-    private static let version = 4
+    private static let version = 7
     private static let installedVersionKey = "database.workoutContentVersion"
 
     static func installIfNeeded(

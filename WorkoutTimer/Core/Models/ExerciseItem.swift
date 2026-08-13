@@ -17,6 +17,7 @@ enum ExerciseCategory: String, CaseIterable, Identifiable {
     case freeze = "Freeze"
     case power = "Power"
     case cardio = "Cardio"
+    case popping = "Popping"
 
     var id: String { rawValue }
 }
