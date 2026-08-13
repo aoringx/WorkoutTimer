@@ -19,7 +19,7 @@ struct ContentView: View {
 
                 ScrollView {
                     VStack(spacing: 30) {
-                        Text("Aaron’s Calisthenics")
+                        Text("Aaron’s Workouts")
                             .font(.system(.largeTitle, design: .rounded, weight: .bold))
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity)

@@ -10,6 +10,7 @@ struct ManageWorkoutsView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var timers: [WorkoutTimerItem]
 
+    @State private var editMode = EditMode.inactive
     @State private var updateError: Error?
 
     @AppStorage(AppSettingKey.timerSortOption)
@@ -17,6 +18,10 @@ struct ManageWorkoutsView: View {
 
     private var orderedTimers: [WorkoutTimerItem] {
         sortOption.sorted(timers)
+    }
+
+    private var isEditing: Bool {
+        editMode.isEditing
     }
 
     var body: some View {
@@ -55,6 +60,7 @@ struct ManageWorkoutsView: View {
                 .appListBackground(tint: AppTheme.electricBlue)
             }
         }
+        .environment(\.editMode, $editMode)
         .background {
             AppBackdrop(tint: AppTheme.electricBlue)
         }
@@ -64,8 +70,19 @@ struct ManageWorkoutsView: View {
         .toolbar {
             if !timers.isEmpty {
                 ToolbarItemGroup(placement: .topBarTrailing) {
-                    WorkoutSortMenu(selection: $sortOption)
-                    EditButton()
+                    if !isEditing {
+                        WorkoutSortMenu(selection: $sortOption)
+                    }
+                    Button(isEditing ? "Done" : "Reorder") {
+                        withAnimation {
+                            if isEditing {
+                                editMode = .inactive
+                            } else {
+                                sortOption = .manual
+                                editMode = .active
+                            }
+                        }
+                    }
                 }
             }
         }
