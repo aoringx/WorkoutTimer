@@ -51,11 +51,9 @@ enum WorkoutDatabase {
                 "Assisted Muscle-ups",
                 "Pull-ups",
                 "Pull-up Negatives",
-                "Assisted Pull-ups",
                 "Inverted Rows",
                 "Chin-ups",
                 "Chin-up Negatives",
-                "Assisted Chin-ups",
                 "Tuck Front Lever",
                 "Assisted Front Lever",
                 "Tuck Back Lever",
@@ -70,10 +68,8 @@ enum WorkoutDatabase {
             exerciseNames: [
                 "Dragon Squats",
                 "Bosu Pistol Squats",
-                "Pistol Squats",
                 "Bulgarian Split Squats",
                 "Bosu Squats",
-                "Squats",
                 "Lunges",
                 "Reverse Lunges",
                 "Calf raises",
@@ -105,7 +101,6 @@ enum WorkoutDatabase {
                 "L-sit Extensions",
                 "Tuck L-sit",
                 "L-sit Leg Raise Holds",
-                "L-sit Leg Raises",
                 "Hanging Leg Raise Pull-ups",
                 "Hanging Leg Raise Holds",
                 "Hanging Leg Raises",
@@ -195,7 +190,7 @@ enum WorkoutDatabase {
     ]
 
     // Increment this when a category workout declaration or order changes.
-    private static let version = 10
+    private static let version = 12
     private static let installedVersionKey = "database.workoutContentVersion"
 
     static func installIfNeeded(

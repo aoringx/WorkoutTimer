@@ -21,8 +21,8 @@ enum ExerciseDatabase {
         ExerciseDefinition(name: "Tuck Planche", category: .planche, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "Advanced Tuck Planche", category: .planche, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "Tuch Planche Push-ups", category: .planche, numberOfReps: 4, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "Pseudo Planche Lean", category: .planche, numberOfReps: 15, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "Knee Pseudo Planche Lean", category: .planche, numberOfReps: 15, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "Pseudo Planche Lean", category: .planche, numberOfReps: 15, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Knee Pseudo Planche Lean", category: .planche, numberOfReps: 15, numberOfSets: 3, restSeconds: 60),
         ExerciseDefinition(name: "Elbow Lever", category: .planche, numberOfReps: 20, numberOfSets: 1, restSeconds: 60),
         ExerciseDefinition(name: "Straddle Bent-arm Planche", category: .planche, numberOfReps: 5, numberOfSets: 3, restSeconds: 45),
         ExerciseDefinition(name: "Pseudo Planche Push-ups", category: .planche, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
@@ -36,23 +36,26 @@ enum ExerciseDatabase {
         ExerciseDefinition(name: "Diamond Push-ups", category: .push, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
         ExerciseDefinition(name: "Russian Push-ups", category: .push, numberOfReps: 6, numberOfSets: 2, restSeconds: 90),
         ExerciseDefinition(name: "Bar One-arm Push-ups", category: .push, numberOfReps: 6, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "Archer Push-ups", category: .push, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "Tricep Extensions", category: .push, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "Archer Push-ups", category: .push, numberOfReps: 12, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "Tricep Extensions", category: .push, numberOfReps: 8, numberOfSets: 1, restSeconds: 60),
         ExerciseDefinition(name: "Explosive Pushups", category: .push, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "Finger Push-ups", category: .push, numberOfReps: 8, numberOfSets: 1, restSeconds: 60),
         ExerciseDefinition(name: "Push-ups", category: .push, numberOfReps: 20, numberOfSets: 1, restSeconds: 90),
 
         // Pull
         ExerciseDefinition(name: "Assisted Muscle-ups", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
-        ExerciseDefinition(name: "Pull-ups", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Pull-ups", category: .pull, numberOfReps: 6, numberOfSets: 3, restSeconds: 60),
         ExerciseDefinition(name: "Pull-up Negatives", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
-        ExerciseDefinition(name: "Chin-ups", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Assisted Pull-ups", category: .pull, numberOfReps: 5, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Inverted Rows", category: .pull, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Chin-ups", category: .pull, numberOfReps: 5, numberOfSets: 3, restSeconds: 60),
         ExerciseDefinition(name: "Chin-up Negatives", category: .pull, numberOfReps: 3, numberOfSets: 3, restSeconds: 60),
-        ExerciseDefinition(name: "Tuck Front Lever", category: .pull, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "Assisted Chin-ups", category: .pull, numberOfReps: 5, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "Tuck Front Lever", category: .pull, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
         ExerciseDefinition(name: "Assisted Front Lever", category: .pull, numberOfReps: 10, numberOfSets: 1, restSeconds: 60),
-        ExerciseDefinition(name: "Tuck Back Lever", category: .pull, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "45 Degree Flags", category: .pull, numberOfReps: 5, numberOfSets: 3, restSeconds: 60),
-        ExerciseDefinition(name: "One Arm Hangs", category: .pull, numberOfReps: 5, numberOfSets: 4, restSeconds: 30),
+        ExerciseDefinition(name: "Tuck Back Lever", category: .pull, numberOfReps: 8, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "45 Degree Flags", category: .pull, numberOfReps: 5, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "One Arm Hangs", category: .pull, numberOfReps: 5, numberOfSets: 2, restSeconds: 30),
         ExerciseDefinition(name: "Active Hangs", category: .pull, numberOfReps: 15, numberOfSets: 1, restSeconds: 60),
         ExerciseDefinition(name: "Dead Hangs", category: .pull, numberOfReps: 15, numberOfSets: 1, restSeconds: 60),
 
@@ -61,6 +64,8 @@ enum ExerciseDatabase {
         ExerciseDefinition(name: "Bosu Pistol Squats", category: .legs, numberOfReps: 4, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "Pistol Squats", category: .legs, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "Bulgarian Split Squats", category: .legs, numberOfReps: 10, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "Bosu Squats", category: .legs, numberOfReps: 15, numberOfSets: 1, restSeconds: 90),
+        ExerciseDefinition(name: "Squats", category: .legs, numberOfReps: 24, numberOfSets: 1, restSeconds: 90),
         ExerciseDefinition(name: "Lunges", category: .legs, numberOfReps: 20, numberOfSets: 2, restSeconds: 90),
         ExerciseDefinition(name: "Reverse Lunges", category: .legs, numberOfReps: 20, numberOfSets: 2, restSeconds: 90),
         ExerciseDefinition(name: "Calf raises", category: .legs, numberOfReps: 12, numberOfSets: 2, restSeconds: 60),
@@ -85,11 +90,11 @@ enum ExerciseDatabase {
         ExerciseDefinition(name: "Straddle L-sit One-leg Raises", category: .lSit, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "L-sit Extensions", category: .lSit, numberOfReps: 3, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "Tuck L-sit", category: .lSit, numberOfReps: 8, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "L-sit Leg Raise Holds", category: .lSit, numberOfReps: 16, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "L-sit Leg Raises", category: .lSit, numberOfReps: 10, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "L-sit Leg Raise Holds", category: .lSit, numberOfReps: 16, numberOfSets: 3, restSeconds: 60),
+        ExerciseDefinition(name: "L-sit Leg Raises", category: .lSit, numberOfReps: 10, numberOfSets: 3, restSeconds: 60),
         ExerciseDefinition(name: "Hanging Leg Raise Pull-ups", category: .lSit, numberOfReps: 3, numberOfSets: 2, restSeconds: 60),
         ExerciseDefinition(name: "Hanging Leg Raise Holds", category: .lSit, numberOfReps: 10, numberOfSets: 2, restSeconds: 60),
-        ExerciseDefinition(name: "Hanging Leg Raises", category: .lSit, numberOfReps: 12, numberOfSets: 2, restSeconds: 60),
+        ExerciseDefinition(name: "Hanging Leg Raises", category: .lSit, numberOfReps: 12, numberOfSets: 3, restSeconds: 60),
         ExerciseDefinition(name: "L-sit Support Holds", category: .lSit, numberOfReps: 20, numberOfSets: 1, restSeconds: 60),
 
         // Core
@@ -171,7 +176,7 @@ enum ExerciseDatabase {
     }
 
     // Increment this when the bundled exercise collection changes.
-    private static let version = 10
+    private static let version = 12
     private static let installedVersionKey = "database.exerciseContentVersion"
 
     @discardableResult
